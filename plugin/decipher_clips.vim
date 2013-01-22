@@ -757,7 +757,7 @@ try:
         firstChar = indices[0]
         elements  = re.sub('[-,]', '', indices)
         indices   = [e.strip() for e in indices.split(',')]
-        joinType  = ' %s ' % joinType
+        joinType  = ', ' if joinType == ',' else ' %s ' % joinType
 
         cond_rgx = re.compile('cond=".*?"')
 
