@@ -1224,7 +1224,7 @@ try:
 
             [Q1]: The parrot is dead! 
         """
-        comment_rgx = re.compile(r'\s*<!-- XXX \[(?P<label>[^\]]+)\]: (?P<note>.*)\s*-->')
+        comment_rgx = re.compile(r'.*XXX \[(?P<label>[^\]]+)\]: (?P<note>.*) -->')
 
         template = '[{label}]: {note}'
 
