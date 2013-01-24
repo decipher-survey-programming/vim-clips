@@ -120,7 +120,7 @@ try:
                   '',
                   '']
 
-        footer = '<marker name="qualified"/>\n\n</survey>'.split('\n')
+        footer = '\n<marker name="qualified"/>\n\n</survey>'.split('\n')
         return header + vbuffer + footer
 
     vim.current.buffer[:] = NewSurvey(vim.current.buffer[:])
