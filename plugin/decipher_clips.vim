@@ -1162,6 +1162,8 @@ try:
             match = text_rgx.match(line)
             if match:
                 output.append(match.groupdict()['text'])
+            else:
+                output.append(line.strip())
 
         return output
 
