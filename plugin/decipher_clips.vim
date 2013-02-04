@@ -828,12 +828,15 @@ try:
         vim.command('call inputrestore()')
         return vim.eval('user_input')
 
-    label     = python_input("Label?")
-    indices   = python_input("Indices?")
-    element   = python_input("Cell Type?")
-    joinType  = python_input("Join type? [or]") or 'or'
-
-    vim.current.line = MakeOrs(vim.current.line, label, indices, element, joinType)
+    try:
+        label     = python_input("Question Label")
+        indices   = python_input("Label Numbers: e.g. (1-4,5|A-D,E)")
+        element   = python_input("Cell Type: e.g. (r|c|ch)")
+        joinType  = python_input("Join type: e.g. (or|and|,) [or]") or 'or'
+    except KeyboardInterrupt:
+        pass
+    else:
+        vim.current.line = MakeOrs(vim.current.line, label, indices, element, joinType)
 
 except Exception, e:
     print e
