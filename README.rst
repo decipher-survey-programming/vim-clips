@@ -28,19 +28,19 @@ Normal Mode
 
         <leader>mo
 
-        Label?: Q1
-        Indices?: 1-3,5,8
-        Cell Type?: r
-        Join type? [or]: or
+        Question Label?: Q1
+        Label Numbers: e.g. (1-4,5|A-D,E): 1-3,5,8
+        Cell Type: e.g. (r|c|ch): r
+        Join type: e.g. (or|and|,) [or]: or
 
         returns: Q1.r1 or Q1.r2 or Q1.r3 or Q1.r5 or Q1.r8
 
         <leader>mo
 
-        Label?: Q2
-        Indices?: A-C,E,H
-        Cell Type?:
-        Join type? [or]:
+        Question Label?: Q2
+        Label Numbers: e.g. (1-4,5|A-D,E): A-C,E,H
+        Cell Type: e.g. (r|c|ch):
+        Join type: e.g. (or|and|,) [or]: or
 
         returns: Q2.A or Q2.B or Q2.C or Q2.E or Q2.H
 
