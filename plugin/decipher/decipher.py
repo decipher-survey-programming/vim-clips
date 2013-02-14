@@ -122,3 +122,23 @@ def openify(lines):
             line = re.sub('_{2,}', '', line)
             lines[i] = line.replace('>', ' open="1" openSize="25" randomize="0">', 1)
     return lines
+
+
+def get_visual_selection(lines, start, end):
+    r"""This function takes a list of lines and two coordinates
+     ``e.g. (1,0) denoting first line, first char``. 
+     It then collapses the lines into a \n joined string and splits
+     into before, inside, and after the coordinates' intersection.
+     *Supports multiple lines*
+
+    Args:
+        lines (list): Lines of text to be processed
+        start (tuple): Coordinates of the start of a selection 
+        end (tuple): Coordinates of the end of a selection 
+    Returns:
+        tuple of strings. (before, inside, after)
+    """
+    before = lines[0][:start[1]]
+    after = lines[-1][end[1] + 1:]
+    inside = '\n'.join(lines)[len(before):(-len(after)) or None]
+    return (before, inside, after)

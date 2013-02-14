@@ -35,8 +35,6 @@ nmap <leader>ju  <Esc>:call Justify()<CR>
 nmap <leader>sr  <Esc>:call SwitchRating()<CR>
 nmap <leader>dif <Esc>:call Vimdiff()<CR>
 nmap <leader>no  <Esc>:call CleanNotes()<CR>
-nmap <leader>hr  <Esc>:call HRef()<CR>
-nmap <leader>mai <Esc>:call Mailto()<CR>
 nmap <leader>ee  <Esc>i exclusive="1" randomize="0"<Esc>
 nmap <leader>rr  <Esc>i randomize="0"<Esc>
 nmap <leader>oe  <Esc>i open="1" openSize="25" randomize="0"<Esc>
@@ -84,6 +82,8 @@ vmap <leader>st  <Esc>:call Strip()<CR>
 vmap <leader>sw  <Esc>:call Switcher()<CR>
 vmap <leader>qu  <Esc>:call URLQuote()<Esc>
 vmap <leader>cl  <Esc>:call CleanUp()<CR>
+vmap <leader>hr  <Esc>:call HRef()<CR>
+vmap <leader>ma  <Esc>:call Mailto()<CR>
 
 
 function! NewSurvey()
@@ -1117,10 +1117,17 @@ endfunction
 
 
 function! Mailto()
-python << EOF
+'<,'>python << EOF
 try:
+    def Mailto(selection):
+        return '<a href="mailto:{email}">{email}</a>'.format(email=selection)
 
-    vim.current.line = '<a href="mailto:{email}">{email}</a>'.format(email=vim.current.line)
+    if vim.eval('visualmode()') == u'\x16':
+        raise NotImplementedError("Visual Block Mode Not Supported")
+    start = vim.current.buffer.mark('<')
+    end   = vim.current.buffer.mark('>')
+    before, inside, after = decipher.get_visual_selection(vim.current.range[:], start, end)
+    vim.current.range[:] = (before + Mailto(inside) + after).split('\n')
 
 except Exception, e:
     print e
@@ -1129,10 +1136,17 @@ endfunction
 
 
 function! HRef()
-python << EOF
+'<,'>python << EOF
 try:
+    def HRef(selection):
+        return '<a href="{selection}">{selection}</a>'.format(selection=selection)
 
-    vim.current.line = '<a href="{line}">{line}</a>'.format(line=vim.current.line)
+    if vim.eval('visualmode()') == u'\x16':
+        raise NotImplementedError("Visual Block Mode Not Supported")
+    start = vim.current.buffer.mark('<')
+    end   = vim.current.buffer.mark('>')
+    before, inside, after = decipher.get_visual_selection(vim.current.range[:], start, end)
+    vim.current.range[:] = (before + HRef(inside) + after).split('\n')
 
 except Exception, e:
     print e
