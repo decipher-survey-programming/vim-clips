@@ -722,6 +722,7 @@ try:
             <row label="r1" cs:extra="SPAM SPAM SPAM">SPAM SPAM SPAM</row>
             <row label="r2" cs:extra="SPAM"          >SPAM</row>
         """
+        vrange = [line for line in vrange if line.strip()]
         textNode_rgx = re.compile('>(.*?)<')
 
         selection = vrange
