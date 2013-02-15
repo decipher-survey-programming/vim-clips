@@ -13,6 +13,16 @@ def clean_xml(text):
 
 
 class TestFactories(unittest.TestCase):
+    def setUp(self):
+        self.elementTemplate = '\n'.join(('<{type} label="{label}"{extra}>',
+                                          '  <title>',
+                                          '    {title}',
+                                          '  </title>',
+                                          '  <comment>{comment}</comment>',
+                                          '{content}',
+                                          '</{type}>',
+                                          '<suspend/>'))
+
     def testElementFactory(self):
         template = ('<{type} label="{label}"{extra}>'
                     '  <title>'
@@ -90,3 +100,25 @@ class TestFactories(unittest.TestCase):
             xmlTest, xmlReal = map(etree.tostring, (xmlTest, xmlReal))
             xmlTest, xmlReal = map(clean_xml, (xmlTest, xmlReal))
             self.assertEqual(xmlTest, xmlReal)
+
+    def testCellFactoryLabelRgx(self):
+        testTitles =   ('Q1. SPAM',
+                        'Q2: EGGS',
+                        '(Q3) HAM',
+                        'Q3.1 BACON')
+        resultXMLs = []
+        for title in testTitles:
+            resultXMLs.append(decipher.element_factory([title], 'radio', '', {}))
+
+        cleanedTitles =   (('Q1', 'SPAM'),
+                           ('Q2', 'EGGS'),
+                           ('Q3', 'HAM'),
+                           ('Q3_1', 'BACON'))
+
+        expectedXMLs = []
+        for label, title in cleanedTitles:
+            formatDict = dict(type='radio', label=label, extra='', title=title, comment='', content='')
+            expectedXMLs.append(self.elementTemplate.format(**formatDict).split('\n'))
+
+        for madeXML, expectedXML in zip(resultXMLs, expectedXMLs):
+            self.assertEqual(madeXML, expectedXML)

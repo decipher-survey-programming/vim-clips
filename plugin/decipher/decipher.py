@@ -29,7 +29,7 @@ def element_factory(selection, elType='radio', comment='', attrs=None):
     if label[0].isdigit():
         label = 'Q' + label
 
-    label = re.sub(r'(\.$|[\(\)])', '', label)
+    label = re.sub(r'(\.$|[\(\):])', '', label)
     label = re.sub(r'[-\.]', '_', label)
 
     template = '\n'.join(("<%(elType)s label=\"%(label)s\">",
