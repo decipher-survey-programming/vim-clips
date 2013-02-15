@@ -350,13 +350,34 @@ class TestClipFunctions(unittest.TestCase):
 
 
     def test_MakeNets(self):
-        pass
+        linesMade = MakeNets(self.cells)
+        linesExpected = ['  <net labels="">Ham</net>',
+                         '  <net labels="">foo. Spam</net>',
+                         '  <net labels="">bar Eggs</net>',
+                         '  <net labels="">42. Bacon</net>']
+
+        self.assertEqual(linesMade, linesExpected)
+
 
     def test_MakeGroups(self):
-        pass
+        linesMade = MakeGroups(self.cells)
+        linesExpected = ['  <group label="g1">Ham</group>',
+                         '  <group label="foo">Spam</group>',
+                         '  <group label="g3">bar Eggs</group>',
+                         '  <group label="g42">Bacon</group>']
+
+        self.assertEqual(linesMade, linesExpected)
+ 
 
     def test_MakeExtras(self):
-        pass
+        linesMade = MakeExtras(Rows(self.cells))
+        linesExpected = ['  <row label="r1"  cs:extra="Ham"     >Ham</row>',
+                         '  <row label="foo" cs:extra="Spam"    >Spam</row>',
+                         '  <row label="r3"  cs:extra="bar Eggs">bar Eggs</row>',
+                         '  <row label="r42" cs:extra="Bacon"   >Bacon</row>']
+
+        self.assertEqual(linesMade, linesExpected)
+
 
     def test_MakeOrs(self):
         pass
