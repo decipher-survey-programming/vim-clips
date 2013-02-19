@@ -851,11 +851,28 @@ try:
 
     def AddValuesLow(vrange):
         """
-        """
-        for i, line in enumerate(vrange):
-            vrange[i] = line.replace('">', '" value="%d">' % (i + 1))
+        Adds value attributes to cells from low to high
 
-        return vrange
+        .. code-block::xml
+
+            <col label="c1">Very Spammy<br/>1</col>
+            <col label="c2">2</col>
+            <col label="c3">Not at all Spammy<br/>3</col>
+
+            <col label="c1" value="1">Very Spammy<br/>1</col>
+            <col label="c2" value="2">2</col>
+            <col label="c3" value="3">Not at all Spammy<br/>3</col>
+        """
+        i = 1
+        output = []
+        for line in vrange:
+            if '>' in line:
+                output.append(line.replace('>', ' value="%d">' % i, 1))
+                i += 1
+            else:
+                output.append(line)
+
+        return output
 
     vim.current.range[:] = AddValuesLow(vim.current.range[:])
 
@@ -871,13 +888,28 @@ try:
 
     def AddValuesHigh(vrange):
         """
+        Adds value attributes to cells from high to low
+
+        .. code-block::xml
+
+            <col label="c3">Not at all Spammy<br/>3</col>
+            <col label="c2">2</col>
+            <col label="c1">Very Spammy<br/>1</col>
+
+            <col label="c3" value="3">Not at all Spammy<br/>3</col>
+            <col label="c2" value="2">2</col>
+            <col label="c1" value="1">Very Spammy<br/>1</col>
         """
-        numElements = len(vrange)
+        i = len([line for line in vrange if '>' in line])
+        output = []
+        for line in vrange:
+            if '>' in line:
+                output.append(line.replace('>', ' value="%d">' % i, 1))
+                i -= 1
+            else:
+                output.append(line)
 
-        for i, line in enumerate(vrange):
-            vrange[i] = line.replace('">', '" value="%d">' % (numElements - i))
-
-        return vrange
+        return output
 
     vim.current.range[:] = AddValuesHigh(vim.current.range[:])
 

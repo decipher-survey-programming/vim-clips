@@ -383,10 +383,28 @@ class TestClipFunctions(unittest.TestCase):
         pass
 
     def test_AddValuesLow(self):
-        pass
+        rowsMade = AddValuesLow(Rows(self.cells))
+
+        rowsExpected = ['  <row label="r1" value="1">Ham</row>',
+                        '  <row label="foo" value="2">Spam</row>',
+                        '  <row label="r3" value="3">bar Eggs</row>',
+                        '  <row label="r42" value="4">Bacon</row>',
+                        '\n']
+
+        self.assertEqual(rowsMade, rowsExpected)
+
 
     def test_AddValuesHigh(self):
-        pass
+        rowsMade = AddValuesHigh(Rows(self.cells))
+
+        rowsExpected = ['  <row label="r1" value="4">Ham</row>',
+                        '  <row label="foo" value="3">Spam</row>',
+                        '  <row label="r3" value="2">bar Eggs</row>',
+                        '  <row label="r42" value="1">Bacon</row>',
+                        '\n']
+
+        self.assertEqual(rowsMade, rowsExpected)
+
 
     def test_Switcher(self):
         pass
