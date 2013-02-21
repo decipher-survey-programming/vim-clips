@@ -142,3 +142,38 @@ def get_visual_selection(lines, start, end):
     after = lines[-1][end[1] + 1:]
     inside = '\n'.join(lines)[len(before):(-len(after)) or None]
     return (before, inside, after)
+
+
+def clean_attribute_spacing(lines):
+    """This function justifies the spacing of attributes accross multiple xml elements
+
+    Args:
+        lines (string): Lines of xml
+    Returns:
+        string. xml with justified attributes
+    """
+    lines = [re.sub('\s{2,}', ' ', line).replace(' >', '>') for line in lines if line.strip()]
+
+    attributes_rgx = re.compile(r'([\w:]+)="([^"]+)"')
+
+    attrDict = {}
+    for line in lines:
+        attrs = attributes_rgx.findall(line)
+        if attrs:
+            for name, value in attrs:
+                largestValue = attrDict.setdefault(name, len(value))
+                if len(value) > largestValue: 
+                    attrDict[name] = len(value)
+
+    output = []
+    for line in lines:
+        attrs = attributes_rgx.findall(line)
+        for name, value in attrs:
+            maxValueLen = attrDict[name]
+            if len(value) < maxValueLen:
+                attr = '{0}="{1}"'.format(name, value)
+                padding = (maxValueLen - len(value)) * ' '
+                line = line.replace(attr, attr + padding)
+        output.append(line)
+
+    return output

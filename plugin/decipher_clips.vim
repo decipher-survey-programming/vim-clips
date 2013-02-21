@@ -84,6 +84,7 @@ vmap <leader>qu  <Esc>:call URLQuote()<Esc>
 vmap <leader>cl  <Esc>:call CleanUp()<CR>
 vmap <leader>hr  <Esc>:call HRef()<CR>
 vmap <leader>mt  <Esc>:call Mailto()<CR>
+vmap <leader>as  <Esc>:call AttrSpacing()<CR>
 
 
 function! NewSurvey()
@@ -160,6 +161,18 @@ try:
         return [line.lstrip() for line in selection.split('\n')]
 
     vim.current.range[:] = CleanUp(vim.current.range[:])
+
+except Exception, e:
+    print e
+EOF
+endfunction
+
+
+function! AttrSpacing()
+'<,'>python << EOF
+try:
+
+    vim.current.range[:] = decipher.clean_attribute_spacing(vim.current.range[:])
 
 except Exception, e:
     print e

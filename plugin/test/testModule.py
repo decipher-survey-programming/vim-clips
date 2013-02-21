@@ -122,3 +122,25 @@ class TestFactories(unittest.TestCase):
 
         for madeXML, expectedXML in zip(resultXMLs, expectedXMLs):
             self.assertEqual(madeXML, expectedXML)
+
+
+    def test_clean_attribute_spacing(self):
+        inputCellsRegular =  ['  <row label="ham">HAM</row>',
+                              '  <row label="spam">SPAM</row>',
+                              '  <row label="r3">BACON</row>']
+
+        expectedCellsRegular = [' <row label="ham" >HAM</row>',
+                                ' <row label="spam">SPAM</row>',
+                                ' <row label="r3"  >BACON</row>']
+
+        self.assertEqual(decipher.clean_attribute_spacing(inputCellsRegular), expectedCellsRegular)
+
+        inputCellsExtra = ['  <row label="ham" cs:extra="HAM"  >HAM</row>',
+                           '  <row label="spam" cs:extra="SPAM" >SPAM</row>',
+                           '  <row label="r3" cs:extra="BACON" exclusive="1" randomize="0">BACON</row>']
+
+        expectedCellsExtra = [' <row label="ham"  cs:extra="HAM"  >HAM</row>',
+                              ' <row label="spam" cs:extra="SPAM" >SPAM</row>',
+                              ' <row label="r3"   cs:extra="BACON" exclusive="1" randomize="0">BACON</row>']
+
+        self.assertEqual(decipher.clean_attribute_spacing(inputCellsExtra), expectedCellsExtra)
