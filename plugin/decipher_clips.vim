@@ -83,7 +83,7 @@ vmap <leader>sw  <Esc>:call Switcher()<CR>
 vmap <leader>qu  <Esc>:call URLQuote()<Esc>
 vmap <leader>cl  <Esc>:call CleanUp()<CR>
 vmap <leader>hr  <Esc>:call HRef()<CR>
-vmap <leader>mt  <Esc>:call Mailto()<CR>
+vmap <leader>hm  <Esc>:call Mailto()<CR>
 vmap <leader>as  <Esc>:call AttrSpacing()<CR>
 
 
