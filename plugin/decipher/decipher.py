@@ -152,7 +152,14 @@ def clean_attribute_spacing(lines):
     Returns:
         string. xml with justified attributes
     """
-    lines = [re.sub('\s{2,}', ' ', line).replace(' >', '>') for line in lines if line.strip()]
+    lines = [re.sub(r'\s+>', '>', line) for line in lines if line.strip()]
+
+    if not lines:
+        return []
+
+    margin = (len(lines[0]) - len(lines[0].lstrip())) * ' '
+
+    lines = [re.sub('\s{2,}', ' ', line) for line in lines]
 
     attributes_rgx = re.compile(r'([\w:]+)="([^"]+)"')
 
@@ -174,6 +181,6 @@ def clean_attribute_spacing(lines):
                 attr = '{0}="{1}"'.format(name, value)
                 padding = (maxValueLen - len(value)) * ' '
                 line = line.replace(attr, attr + padding)
-        output.append(line)
+        output.append(margin + line.lstrip())
 
     return output
