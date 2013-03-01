@@ -69,7 +69,7 @@ def cell_factory(selection, cellType, prefix='', attrs=None):
     """
     attrs = {} if attrs is None else attrs
     selection = [line.strip() for line in selection if line.strip()]
-    label_rgx = re.compile("^([a-zA-Z0-9_]{1,6})\.\s{1,}")
+    label_rgx = re.compile("^\[?([a-zA-Z0-9_]{1,6})\]?\.\s{1,}")
 
     cells = []
     for i, cell in enumerate(selection):
