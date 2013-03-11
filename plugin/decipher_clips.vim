@@ -773,8 +773,6 @@ try:
         indices   = [e.strip() for e in indices.split(',')]
         joinType  = ', ' if joinType == ',' else ' %s ' % joinType
 
-        cond_rgx = re.compile('cond=".*?"')
-
         syntaxError = "Unknown input. Ranges should numeric 1-10, or alpha A-F, but not both"
         rangeError = "Range is backwards: %s-%s"
 
@@ -830,7 +828,16 @@ try:
 
         condString = joinType.join(["%(label)s.%(element)s" % formatDict + c for c in res])
 
-        if cond_rgx.findall(line):
+        cond_rgx = re.compile('cond=".*?"')
+        rowCond_rgx = re.compile('rowCond=".*?"')
+        colCond_rgx = re.compile('colCond=".*?"')
+
+        if rowCond_rgx.search(line):
+            if re.search(r'\[row\]', condString):  # give Q1[row].c1 style priority for rowCond
+                return rowCond_rgx.sub('rowCond="{0}"'.format(condString), line)
+            elif re.search(r'\[col\]', condString):  # give Q1[row].c1 style priority for rowCond
+                return colCond_rgx.sub('colCond="{0}"'.format(condString), line)
+        elif cond_rgx.search(line):
             return cond_rgx.sub('cond="{0}"'.format(condString), line)
 
         return condString
