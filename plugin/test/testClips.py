@@ -371,9 +371,9 @@ class TestClipFunctions(unittest.TestCase):
 
     def test_MakeExtras(self):
         linesMade = MakeExtras(Rows(self.cells))
-        linesExpected = ['  <row label="r1"  cs:extra="Ham"     >Ham</row>',
+        linesExpected = ['  <row label="r1" cs:extra="Ham"     >Ham</row>',
                          '  <row label="foo" cs:extra="Spam"    >Spam</row>',
-                         '  <row label="r3"  cs:extra="bar Eggs">bar Eggs</row>',
+                         '  <row label="r3" cs:extra="bar Eggs">bar Eggs</row>',
                          '  <row label="r42" cs:extra="Bacon"   >Bacon</row>']
 
         self.assertEqual(linesMade, linesExpected)
