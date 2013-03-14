@@ -48,6 +48,7 @@ nmap <leader>mb  <Esc>i<br><br><Esc>
 nmap <leader>nu  <Esc>:.,$s'\v(^\d+) '\1. 'gc<CR>
 nmap <leader>le  <Esc>:.,$s'\v(^[A-Z]+) '\1. 'gc<CR>
 nmap <leader>va  <Esc>:call Validate()<Esc>
+nmap <leader>cb  <Esc>:call CommentBlocks()<Esc>
 
 
 " Visual Mode Mappings
@@ -1344,6 +1345,58 @@ try:
     cmd = [PROGRAM] + [f.name for f in files]
 
     Popen(cmd, stdout=PIPE).wait()
+
+except Exception, e:
+    print e
+EOF
+endfunction
+
+
+function! CommentBlocks()
+python << EOF
+"""
+Add <!-- EO block --> style comments
+to the end of blocks for easier navigation
+of nested block trees
+"""
+try:
+    def CommentBlocks(lines):
+        from xml import sax
+        import re
+
+
+        EOBTemplate = '<!-- EO {label} -->'  # END OF BLOCK Template
+
+
+        class BlockCommentHandler(sax.ContentHandler):
+            def __init__(self, documentLines):
+                sax.ContentHandler.__init__(self)
+                self.documentLines = documentLines
+                self.blocks = []
+                self.lineCount = 0  # number of lines added for offset
+
+            def startElement(self, name, attrs):
+                if name == 'block':
+                    self.blocks.append(attrs['label'])
+
+            def endElement(self, name):
+                if name == 'block':
+                    lineNo = self._locator.getLineNumber()
+                    label = self.blocks.pop()
+                    comment = EOBTemplate.format(label=label)
+                    eobIndex = lineNo + self.lineCount
+                    eobLine = self.documentLines[eobIndex]
+                    if re.search(EOBTemplate.format(label='.*'), eobLine):
+                        return  # already commented
+                    self.documentLines.insert(eobIndex, comment)
+                    self.lineCount += 1
+
+        sh = BlockCommentHandler(lines)
+        doc = sax.parseString('\n'.join(lines), sh)
+
+        return sh.documentLines
+
+    vim.current.buffer[:] = CommentBlocks(vim.current.buffer[:])
 
 except Exception, e:
     print e

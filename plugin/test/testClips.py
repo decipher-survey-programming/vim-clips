@@ -32,7 +32,8 @@ from util import (NewSurvey,
                   AddAlts,
                   Strip,
                   Justify,
-                  CleanNotes)
+                  CleanNotes,
+                  CommentBlocks)
 
 
 class TestClipFunctions(unittest.TestCase):
@@ -432,3 +433,41 @@ class TestClipFunctions(unittest.TestCase):
 
     def test_CleanNotes(self):
         pass
+
+    def test_CommentBlocks(self):
+
+        elementExpected = ['<survey>',
+                           '<block label="spam_block" randomizeChildren="0" cond="1">',
+                           '<radio label="Q1">',
+                           '  <title>',
+                           '    What would you like to eat?',
+                           '  </title>',
+                           '  <comment>Please select one</comment>',
+                           '  <row label="r1">Ham</row>',
+                           '  <row label="foo">Spam</row>',
+                           '  <row label="r3">bar Eggs</row>',
+                           '  <row label="r42">Bacon</row>',
+                           '</radio>',
+                           '<suspend/>',
+                           '</block>',
+                           '<!-- EO spam_block -->',
+                           '</survey>']
+
+        elementSent = ['<survey>',
+                       '<block label="spam_block" randomizeChildren="0" cond="1">',
+                       '<radio label="Q1">',
+                       '  <title>',
+                       '    What would you like to eat?',
+                       '  </title>',
+                       '  <comment>Please select one</comment>',
+                       '  <row label="r1">Ham</row>',
+                       '  <row label="foo">Spam</row>',
+                       '  <row label="r3">bar Eggs</row>',
+                       '  <row label="r42">Bacon</row>',
+                       '</radio>',
+                       '<suspend/>',
+                       '</block>',
+                       '</survey>']
+
+        self.assertEqual(CommentBlocks(elementSent), elementExpected)
+        self.assertEqual(CommentBlocks(elementExpected), elementExpected)
