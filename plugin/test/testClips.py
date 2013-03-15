@@ -381,7 +381,51 @@ class TestClipFunctions(unittest.TestCase):
 
 
     def test_MakeOrs(self):
-        pass
+        args = ('', 'Q1', '1-3,4,5-10', 'r', 'or')
+        argsSpaced = ('', 'Q1', '1-3, 4  ,5-10', 'r', 'or')
+        expected = ''.join(("Q1.r1 or Q1.r2 or Q1.r3 or Q1.r4 or Q1.r5 ",
+                            "or Q1.r6 or Q1.r7 or Q1.r8 or Q1.r9 or Q1.r10"))
+        self.assertEqual(MakeOrs(*args), expected)
+        self.assertEqual(MakeOrs(*argsSpaced), expected)
+
+
+        args = ('', 'Q2', 'A-C,K,W-DD', '', 'and')
+        argsSpaced = ('', 'Q2', 'A-C , K ,   W-DD', '', 'and')
+        expected = ''.join(("Q2.A and Q2.B and Q2.C and Q2.K and Q2.W and ",
+                            "Q2.X and Q2.Y and Q2.Z and Q2.AA and Q2.BB and Q2.CC and Q2.DD"))
+        self.assertEqual(MakeOrs(*args), expected)
+        self.assertEqual(MakeOrs(*argsSpaced), expected)
+
+        args = ('', 'Q3', 'A-C,3,W-DD', '', 'or')
+        self.assertRaises(SyntaxError, MakeOrs, *args)
+
+        args = ('', 'Q4', 'A--C', '', 'ham')
+        self.assertRaises(SyntaxError, MakeOrs, *args)
+
+        args = ('', 'Q5', '3-1', '', 'spam')
+        self.assertRaises(ValueError, MakeOrs, *args)
+
+        args = ('', 'Q6', 'C-A', '', 'eggs')
+        self.assertRaises(ValueError, MakeOrs, *args)
+
+        args = ('', 'Q7', 'CC-A', '', 'bacon')
+        self.assertRaises(ValueError, MakeOrs, *args)
+
+
+        condLine = 'cond="" rowCond="" colCond=""'
+
+        args = (condLine, 'C1', '1-3', 'r', 'or')
+        expectedLine = 'cond="C1.r1 or C1.r2 or C1.r3" rowCond="" colCond=""'
+        self.assertEqual(MakeOrs(*args), expectedLine)
+
+        args = (condLine, 'C1[row]', '1-3', 'c', 'or')
+        expectedLine = 'cond="" rowCond="C1[row].c1 or C1[row].c2 or C1[row].c3" colCond=""'
+        self.assertEqual(MakeOrs(*args), expectedLine)
+
+        args = (condLine, 'C1[col]', '1-3', 'r', 'or')
+        expectedLine = 'cond="" rowCond="" colCond="C1[col].r1 or C1[col].r2 or C1[col].r3"'
+        self.assertEqual(MakeOrs(*args), expectedLine)
+
 
     def test_AddValuesLow(self):
         rowsMade = AddValuesLow(Rows(self.cells))

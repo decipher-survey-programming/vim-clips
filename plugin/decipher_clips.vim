@@ -765,37 +765,42 @@ function! MakeOrs()
 python << EOF
 try:
 
-    def MakeOrs(line, label, indices, element, joinType):
+    def MakeOrs(line, label, indices, element, joinType='or'):
         """
         """
-        assert indices.find('--') == -1, "Cannot have multiple dashes in range"
-        firstChar = indices[0]
-        elements  = re.sub('[-,]', '', indices)
-        indices   = [e.strip() for e in indices.split(',')]
-        joinType  = ', ' if joinType == ',' else ' %s ' % joinType
+        import re
 
-        syntaxError = "Unknown input. Ranges should numeric 1-10, or alpha A-F, but not both"
-        rangeError = "Range is backwards: %s-%s"
+        indices = indices.strip()
+        if indices.find('--') != -1:
+            raise SyntaxError("Cannot have multiple dashes in range")
+
+        firstChar = indices[0]
+        elementTest  = re.sub('[-,\s]', '', indices)
+        indices = (i.strip() for i in indices.split(','))
+        joinType = ', ' if joinType == ',' else ' %s ' % joinType
+
+        syntaxMsg = "Unknown input. Ranges should numeric 1-10, or alpha A-F, but not both"
+        valueMsg = "Range is backwards: {0}-{1}"
 
         res = []
 
         if firstChar.isdigit():
-            if not elements.isdigit():
-                raise Exception(syntaxError)
+            if not re.match(r'^\d+$', elementTest):
+                raise SyntaxError(syntaxMsg)
 
             for i in indices:
                 if '-' in i:
                     start, end = map(int, i.split('-'))
                     if start > end:
-                        raise Exception("Range is backwards: %d-%d" % (start, end))
+                        raise ValueError(valueMsg.format(start, end))
                     rng = list(range(start, end + 1))
                     res.extend(map(str, rng))
                 else:
                     res.append(i)
 
         if firstChar.isalpha():
-            if not (elements.islower() or elements.isupper()):
-                raise Exception("Cannot mix case. All letters must be upper or lower")
+            if not (re.match(r'^[a-z]+$', elementTest) or re.match(r'^[A-Z]+$', elementTest)):
+                raise SyntaxError("Cannot mix case. All letters must be UPPER or lower")
 
             for c in indices:
                 case = uppercase if firstChar.isupper() else lowercase
@@ -803,15 +808,15 @@ try:
                 if '-' in c:
                     start, end = c.split('-')
                     if len(start) > len(end):
-                        raise Exception(rangeError % (start, end))
+                        raise ValueError(valueMsg.format(start, end))
                     for c in (start, end):
                         if c.count(c[0]) != len(c):
-                            raise Exception("Labels must be uniform: AA BB CC, not AC")
+                            raise SyntaxError("Labels must be uniform: AA BB CC, not AC")
                     startIndex = case.index(start[0])
                     if len(start) == len(end):
                         endIndex = case.index(end[0])
                         if endIndex < startIndex:
-                            raise Exception(rangeError % (start, end))
+                            raise ValueError(valueMsg.format(start, end))
                     multiplier = len(start)
                     rng = [start]
                     while start != end:
@@ -833,11 +838,10 @@ try:
         rowCond_rgx = re.compile('rowCond=".*?"')
         colCond_rgx = re.compile('colCond=".*?"')
 
-        if rowCond_rgx.search(line):
-            if re.search(r'\[row\]', condString):  # give Q1[row].c1 style priority for rowCond
-                return rowCond_rgx.sub('rowCond="{0}"'.format(condString), line)
-            elif re.search(r'\[col\]', condString):  # give Q1[row].c1 style priority for rowCond
-                return colCond_rgx.sub('colCond="{0}"'.format(condString), line)
+        if rowCond_rgx.search(line) and re.search(r'\[row\]', condString):
+            return rowCond_rgx.sub('rowCond="{0}"'.format(condString), line)
+        elif colCond_rgx.search(line) and re.search(r'\[col\]', condString):
+            return colCond_rgx.sub('colCond="{0}"'.format(condString), line)
         elif cond_rgx.search(line):
             return cond_rgx.sub('cond="{0}"'.format(condString), line)
 
@@ -858,7 +862,8 @@ try:
     except KeyboardInterrupt:
         pass
     else:
-        vim.current.line = MakeOrs(vim.current.line, label, indices, element, joinType)
+        args = (arg.strip() for arg in (label, indices, element, joinType))
+        vim.current.line = MakeOrs(vim.current.line, *args)
 
 except Exception, e:
     print e
