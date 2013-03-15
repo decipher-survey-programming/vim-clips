@@ -47,6 +47,7 @@ class TestClipFunctions(unittest.TestCase):
                              '4.',
                              '5. Very Spammy']
 
+
     def test_NewSurvey(self):
         xmlLines = NewSurvey(['<res label="dinner">SPAM HAM EGGS</res>'])
 
@@ -67,7 +68,8 @@ class TestClipFunctions(unittest.TestCase):
                             '',
                             '<samplesources default="1">',
                             '  <samplesource list="1" title="default">',
-                            '    <exit cond="qualified"><b>Thanks again for completing the survey!<br/><br/>Your feedback and quick response to this survey are greatly appreciated.</b></exit>',
+                            '    <exit cond="qualified"><b>Thanks again for completing the survey!'
+                            '<br/><br/>Your feedback and quick response to this survey are greatly appreciated.</b></exit>',
                             '    <exit cond="terminated"><b>Thank you for your selection!</b></exit>',
                             '    <exit cond="overquota"><b>Thank you for your selection!</b></exit>',
                             '  </samplesource>',
@@ -452,34 +454,136 @@ class TestClipFunctions(unittest.TestCase):
 
 
     def test_Switcher(self):
-        pass
+        rows = ['<row label="r1">Ham</row>',
+                '<row label="r2">Spam</row>',
+                '<row label="r3">Eggs</row>',
+                '<row label="r4">Bacon</row>']
+
+        cols = ['<col label="c1">Ham</col>',
+                '<col label="c2">Spam</col>',
+                '<col label="c3">Eggs</col>',
+                '<col label="c4">Bacon</col>']
+
+        self.assertEqual(Switcher(rows[:]), cols)
+        self.assertEqual(Switcher(cols[:]), rows)
+
 
     def test_SwitchRating(self):
-        pass
+        byColsTag = '<radio label="Q1" averages="cols" values="order" adim="rows" type="rating">'
+        byRowsTag = '<radio label="Q1" averages="rows" values="order" adim="cols" type="rating">'
+        self.assertEquals(SwitchRating(byColsTag[:]), byRowsTag)
+        self.assertEquals(SwitchRating(byRowsTag[:]), byColsTag)
+
 
     def test_AddGroups(self):
-        pass
+        rows = ['<row label="r1">Ham</row>',
+                '<row label="r2">Spam</row>',
+                '<row label="r3">Eggs</row>',
+                '<row label="r4">Bacon</row>']
+
+        rowsWithGroups = ['<row label="r1" groups="g1">Ham</row>',
+                          '<row label="r2" groups="g1">Spam</row>',
+                          '<row label="r3" groups="g1">Eggs</row>',
+                          '<row label="r4" groups="g1">Bacon</row>']
+        self.assertEqual(AddGroups(rows), rowsWithGroups)
+
 
     def test_CommentQuestion(self):
-        pass
+        text = 'Select all the Spam'
+        commentedText = ['  <comment>{text}</comment>'.format(text=text)]
+
+        self.assertEqual(CommentQuestion([text]), commentedText)
+
 
     def test_HTMLComment(self):
-        pass
+        self.assertEqual(HTMLComment(self.cells), ['<!--'] + self.cells + ['-->'])
+
 
     def test_AddAlts(self):
-        pass
+        element = ['<radio label="Q1" averages="cols" values="order" adim="rows" type="rating">',
+                   '  <title>',
+                   '    What would you like to eat?',
+                   '  </title>',
+                   '  <comment>Please select one</comment>',
+                   '  <row label="r1">Ham</row>',
+                   '  <row label="foo">Spam</row>',
+                   '  <row label="r3">bar Eggs</row>',
+                   '  <row label="r42">Bacon</row>',
+                   '</radio>',
+                   '<suspend/>']
+
+        elementExpected = ['<radio label="Q1" averages="cols" values="order" adim="rows" type="rating">',
+                           '  <title>',
+                           '    What would you like to eat?',
+                           '  </title>',
+                           '  <alt>',
+                           '    What would you like to eat?',
+                           '  </alt>',
+                           '  <comment>Please select one</comment>',
+                           '  <row label="r1"><alt>Ham</alt>Ham</row>',
+                           '  <row label="foo"><alt>Spam</alt>Spam</row>',
+                           '  <row label="r3"><alt>bar Eggs</alt>bar Eggs</row>',
+                           '  <row label="r42"><alt>Bacon</alt>Bacon</row>',
+                           '</radio>',
+                           '<suspend/>']
+        
+        self.assertEquals(AddAlts(element), elementExpected)
+
 
     def test_Strip(self):
-        pass
+        groups = ['  <group label="g1">Ham</group>',
+                  '  <group label="foo">Spam</group>',
+                  '  <group label="g3">bar Eggs</group>',
+                  '  <group label="g42">Bacon</group>']
+
+        rows = ['  <row label="r1">Ham</row>',
+                '  <row label="foo">Spam</row>',
+                '  <row label="r3">bar Eggs</row>',
+                '  <row label="r42">Bacon</row>']
+
+        cols = ['  <col label="c1">Ham</col>',
+                '  <col label="foo">Spam</col>',
+                '  <col label="c3">bar Eggs</col>',
+                '  <col label="c42">Bacon</col>']
+
+
+        choices = ['  <choice label="ch1">Ham</choice>',
+                   '  <choice label="foo">Spam</choice>',
+                   '  <choice label="ch3">bar Eggs</choice>',
+                   '  <choice label="ch42">Bacon</choice>']
+
+        linesExpected = ['Ham', 'Spam', 'bar Eggs', 'Bacon']
+
+        for cells in (groups, rows, cols, choices):
+            self.assertEqual(Strip(cells), linesExpected)
+
 
     def test_Justify(self):
-        pass
+        someText = '    Well, there\'s egg and bacon; egg sausage and bacon; egg and spam;' \
+                   ' egg bacon and spam; egg bacon     sausage and spam; spam bacon sausage' \
+                   ' and spam; spam egg spam spam bacon    and spam; spam sausage spam spam' \
+                   ' bacon             spam            tomato            and           spam'
+
+        justifiedText = ['    Well, there\'s egg and bacon; egg sausage and bacon; egg and spam; egg bacon and spam; egg bacon sausage',
+                         '    and spam; spam bacon sausage and spam; spam egg spam spam bacon and spam; spam sausage spam spam bacon',
+                         '    spam tomato and spam']
+
+        self.assertEqual(Justify(someText), justifiedText)
+
 
     def test_CleanNotes(self):
-        pass
+        notes = ['<!-- XXX [Q1]: Not enough Spam -->',
+                 '<!-- XXX [Q2]: Bacon doesn\'t have Spam on it -->',
+                 '<!-- XXX [Q3]: Spam, then Eggs, then Spam -->']
+
+        notesExpected =  ['[Q1]: Not enough Spam',
+                          '[Q2]: Bacon doesn\'t have Spam on it',
+                          '[Q3]: Spam, then Eggs, then Spam']
+
+        self.assertEqual(CleanNotes(notes), notesExpected)
+
 
     def test_CommentBlocks(self):
-
         elementExpected = ['<survey>',
                            '<block label="spam_block" randomizeChildren="0" cond="1">',
                            '<radio label="Q1">',
