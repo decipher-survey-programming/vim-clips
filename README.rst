@@ -1,18 +1,20 @@
-#############################
-decipher-clips plugin for VIM
-#############################
+decipher-clips plugin for vim
+=============================
+
+.. image:: https://travis-ci.org/rwscarb/decipher-clips.png?branch=master
+        :target: https://travis-ci.org/rwscarb/decipher-clips
 
 
 Installation
-============
+------------
 
 You might want to use `pathogen <https://github.com/tpope/vim-pathogen>`_ to
-install decipher-clips in VIM. Also you need a VIM version that was compiled with
+install decipher-clips in vim. Also you need a vim version that was compiled with
 ``+python``, which is typical for most distributions on Linux.
 
 
 Cheat Sheet
-===========
+-----------
 
 Normal Mode
     Clean up unicode, newlines, tabs and place the current buffer in a new-survey template
