@@ -84,7 +84,7 @@ vmap <leader>sw  <Esc>:call Switcher()<CR>
 vmap <leader>qu  <Esc>:call URLQuote()<Esc>
 vmap <leader>cl  <Esc>:call CleanUp()<CR>
 vmap <leader>hr  <Esc>:call HRef()<CR>
-vmap <leader>hm  <Esc>:call Mailto()<CR>
+vmap <leader>ml  <Esc>:call MailLink()<CR>
 vmap <leader>as  <Esc>:call AttrSpacing()<CR>
 
 
@@ -1175,10 +1175,10 @@ EOF
 endfunction
 
 
-function! Mailto()
+function! MailLink()
 '<,'>python << EOF
 try:
-    def Mailto(selection):
+    def MailLink(selection):
         return '<a href="mailto:{email}">{email}</a>'.format(email=selection)
 
     if vim.eval('visualmode()') == u'\x16':
@@ -1186,7 +1186,7 @@ try:
     start = vim.current.buffer.mark('<')
     end   = vim.current.buffer.mark('>')
     before, inside, after = decipher.get_visual_selection(vim.current.range[:], start, end)
-    vim.current.range[:] = (before + Mailto(inside) + after).split('\n')
+    vim.current.range[:] = (before + MailLink(inside) + after).split('\n')
 
 except Exception, e:
     print e
