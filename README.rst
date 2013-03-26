@@ -145,39 +145,6 @@ To clean aggregated tasks in the form of ``<!-- XXX [foo]: bar -->``
     [Q2]: Bacon doesn't have Spam on it
     [Q3]: Spam, then Eggs, then Spam
 
-**HRef**
-
-Turn the selected text into a hyperlink. This is useful in emails where the href and the
-text node will have the same value.
-
-.. code-block:: xml+cheetah
-
-    <leader>hr
-
-    http://google.com
-
-...will become...
-
-.. code-block:: xml+cheetah
-
-    <a href="http://google.com">http://google.com</a>
-
-**MailLink**
-
-Turn the selected text into a ``mailto:`` hyperlink
-
-.. code-block:: xml+cheetah
-
-    <leader>ml
-
-    foo@bar.com
-
-...will become...
-
-.. code-block:: xml+cheetah
-
-    <a href="mailto:foo@bar.com">foo@bar.com</a>
-
 **Insertions**
 
 Executing these commands will insert their accompanied text at the cursor's position
@@ -977,3 +944,36 @@ Clean out common utf-8 chars and remove excessive tabs and newlines
 .. code-block:: xml+cheetah
 
     '"HAM"-"SPAM"&amp;"EGGS"'...
+
+**HRef**
+
+Turn the selected text into a hyperlink. This is useful in emails where the href and the
+text node will have the same value.
+
+.. code-block:: xml+cheetah
+
+    <leader>hr
+
+    http://google.com
+
+...will become...
+
+.. code-block:: xml+cheetah
+
+    <a href="http://google.com">http://google.com</a>
+
+**MailLink**
+
+Turn the selected text into a ``mailto:`` hyperlink
+
+.. code-block:: xml+cheetah
+
+    <leader>ml
+
+    foo@bar.com
+
+...will become...
+
+.. code-block:: xml+cheetah
+
+    <a href="mailto:foo@bar.com">foo@bar.com</a>
