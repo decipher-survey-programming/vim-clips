@@ -26,7 +26,7 @@ These commands are to be executed in vim's Normal mode
 Clean up unicode, newlines, tabs and place the current buffer in a new-survey template. This is typically
 the first thing done when working with a *new* survey.
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>ss
 
@@ -36,7 +36,7 @@ Create boolean logic you can trust. Conditions will be put inside a ``cond=""`` 
 on the line where invoked. Supports alpha ranges as well as numeric. Will place (if found) ``[row]``
 into a ``rowCond=""`` and ``[col]`` into a ``colCond=""`` similar to the third example below.
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>mo
 
@@ -47,11 +47,11 @@ into a ``rowCond=""`` and ``[col]`` into a ``colCond=""`` similar to the third e
 
 ...will become...
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     Q1.r1 and Q1.r2 and Q1.r3 and Q1.r5 and Q1.r8
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>mo
 
@@ -62,11 +62,11 @@ into a ``rowCond=""`` and ``[col]`` into a ``colCond=""`` similar to the third e
 
 ...will become...
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     Q2.A or Q2.B or Q2.C or Q2.E or Q2.H
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>mo
 
@@ -77,7 +77,7 @@ into a ``rowCond=""`` and ``[col]`` into a ``colCond=""`` similar to the third e
 
 ...will become...
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     Q3[row].c1 or Q3[row].c2 or Q3[row].c3 or Q3[row].c4 or Q3[row].c5
 
@@ -86,7 +86,7 @@ into a ``rowCond=""`` and ``[col]`` into a ``colCond=""`` similar to the third e
 Justify the current line with hard breaks, removing extra spaces in the process. Indentation will
 be preserved and words will not be broken.
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>ju
 
@@ -94,7 +94,7 @@ be preserved and words will not be broken.
 
 ...will become...
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     Well, there's egg and bacon; egg sausage and bacon; egg and spam; egg bacon and spam; egg bacon sausage
     and spam; spam bacon sausage and spam; spam egg spam spam bacon and spam; spam sausage spam spam bacon
@@ -104,7 +104,7 @@ be preserved and words will not be broken.
 
 Switch adim and averages between cols and rows
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>sr
 
@@ -112,7 +112,7 @@ Switch adim and averages between cols and rows
 
 ...will become...
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     averages="rows" adim="cols"
 
@@ -121,7 +121,7 @@ Switch adim and averages between cols and rows
 Open the current buffer into parts **delimited by blank lines** in gvimdiff. This is very handy when trying
 to discover differences between repeating items in a questionnaire.
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>dif
 
@@ -129,7 +129,7 @@ to discover differences between repeating items in a questionnaire.
 
 To clean aggregated tasks in the form of ``<!-- XXX [foo]: bar -->``
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>no
 
@@ -139,7 +139,7 @@ To clean aggregated tasks in the form of ``<!-- XXX [foo]: bar -->``
 
 ...will become...
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     [Q1]: Not enough Spam
     [Q2]: Bacon doesn't have Spam on it
@@ -150,7 +150,7 @@ To clean aggregated tasks in the form of ``<!-- XXX [foo]: bar -->``
 Turn the selected text into a hyperlink. This is useful in emails where the href and the
 text node will have the same value.
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>hr
 
@@ -158,7 +158,7 @@ text node will have the same value.
 
 ...will become...
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <a href="http://google.com">http://google.com</a>
 
@@ -166,7 +166,7 @@ text node will have the same value.
 
 Turn the selected text into a ``mailto:`` hyperlink
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>ml
 
@@ -174,7 +174,7 @@ Turn the selected text into a ``mailto:`` hyperlink
 
 ...will become...
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <a href="mailto:foo@bar.com">foo@bar.com</a>
 
@@ -182,61 +182,61 @@ Turn the selected text into a ``mailto:`` hyperlink
 
 Executing these commands will insert their accompanied text at the cursor's position
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>ee
 
     exclusive="1" randomize="0"
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>rr
 
     randomize="0"
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>oe
 
     open="1" openSize="25" randomize="0"
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>aa
 
     aggregate="0" percentages="0"
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>oo
 
     optional="1"
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>dev
 
     where="execute"
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>sh
 
     shuffle="rows"
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>su
 
     <suspend/>  // this is inserted below the current line
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>br
 
     <br/><br/>
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>mb
 
@@ -253,7 +253,7 @@ Note the use of the period as a delimiter of a cell's label.
 
 Make row cells
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>ro
 
@@ -264,7 +264,7 @@ Make row cells
 
 ...will become...
 
-.. code-block::
+.. code-block:: xml+cheetah
 
       <row label="r1">Ham</row>
       <row label="foo">Spam</row>
@@ -275,7 +275,7 @@ Make row cells
 
 Make col cells
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>co
 
@@ -286,7 +286,7 @@ Make col cells
 
 ...will become...
 
-.. code-block::
+.. code-block:: xml+cheetah
 
       <col label="c1">Ham</col>
       <col label="foo">Spam</col>
@@ -297,7 +297,7 @@ Make col cells
 
 Make choice cells
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>ch
 
@@ -308,7 +308,7 @@ Make choice cells
 
 ...will become...
 
-.. code-block::
+.. code-block:: xml+cheetah
 
       <choice label="ch1">Ham</choice>
       <choice label="foo">Spam</choice>
@@ -320,7 +320,7 @@ Make choice cells
 Make rating-style col cells with ``<br/>`` tags before poles. Note: periods delimiting labels and text
 are optional as the digits are assumed to be the rating numbers.
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>ra
 
@@ -332,7 +332,7 @@ are optional as the digits are assumed to be the rating numbers.
 
 ...will become...
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <col label="c1">Spammy<br/>1</col>
     <col label="c2">2</col>
@@ -344,7 +344,7 @@ are optional as the digits are assumed to be the rating numbers.
 
 Make radio element
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>mr
 
@@ -356,7 +356,7 @@ Make radio element
 
 ...will become...
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <radio label="Q1">
       <title>
@@ -374,7 +374,7 @@ Make radio element
 
 Make radio-rating element
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>mv
 
@@ -390,7 +390,7 @@ Make radio-rating element
 
 ...will become...
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <radio label="Q1" averages="cols" values="order" adim="rows" type="rating">
       <title>
@@ -412,7 +412,7 @@ Make radio-rating element
 
 Make checkbox element
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>mc
 
@@ -424,7 +424,7 @@ Make checkbox element
 
 ...will become...
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <checkbox label="Q1" atleast="1">
       <title>
@@ -442,7 +442,7 @@ Make checkbox element
 
 Make select element
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>ms
 
@@ -458,7 +458,7 @@ Make select element
 
 ...will become...
 
-.. code-block::
+.. code-block:: xml+cheetah
     
     <select label="Q1" optional="0">
       <title>
@@ -480,7 +480,7 @@ Make select element
 
 Make number element
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>mn
 
@@ -492,7 +492,7 @@ Make number element
 
 ...will become...
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <number label="Q1" optional="0" size="3">
       <title>
@@ -510,7 +510,7 @@ Make number element
 
 Make float element
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>mf
 
@@ -518,7 +518,7 @@ Make float element
 
 ...will become...
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <float label="Q1" optional="0" size="3">
       <title>
@@ -532,7 +532,7 @@ Make float element
 
 Make text element
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>mt
 
@@ -544,7 +544,7 @@ Make text element
 
 ...will become...
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <text label="Q1" optional="0">
       <title>
@@ -562,7 +562,7 @@ Make text element
 
 Make textarea element
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>ma
 
@@ -570,9 +570,9 @@ Make textarea element
 
 ...will become...
 
-.. code-block::
+.. code-block:: xml+cheetah
 
-    <textarea label="Q42" optional="0"
+    <textarea label="Q42" optional="0">
       <title>
         Briefly describe the ultimate question of life, the universe, and everything
       </title>
@@ -584,7 +584,7 @@ Make textarea element
 
 Make html element
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>mh
 
@@ -592,7 +592,7 @@ Make html element
 
 ...will become...
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <html label="" where="survey">
       <p>
@@ -604,7 +604,7 @@ Make html element
 
 Make res elements
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>re
 
@@ -612,7 +612,7 @@ Make res elements
 
 ...will become...
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <res label="spamLot">Ham Spam Eggs Bacon and Spam</res>
 
@@ -620,7 +620,7 @@ Make res elements
 
 Make group cells
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>mg
 
@@ -631,7 +631,7 @@ Make group cells
 
 ...will become...
 
-.. code-block::
+.. code-block:: xml+cheetah
 
       <group label="g1">Spam</group>
       <group label="g2">Eggs</group>
@@ -642,7 +642,7 @@ Make group cells
 
 Make net Cells
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>ne
 
@@ -653,7 +653,7 @@ Make net Cells
 
 ...will become...
 
-.. code-block::
+.. code-block:: xml+cheetah
 
       <net labels="">Spam</net>
       <net labels="">Eggs</net>
@@ -664,7 +664,7 @@ Make net Cells
 
 Make noanswer cells
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>na
 
@@ -672,7 +672,7 @@ Make noanswer cells
 
 ...will become...
 
-.. code-block::
+.. code-block:: xml+cheetah
 
       <noanswer label="r99">I do not like spam</noanswer>
 
@@ -680,7 +680,7 @@ Make noanswer cells
 
 Make a pipe consisting of selected lines as cases
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>ca
 
@@ -691,7 +691,7 @@ Make a pipe consisting of selected lines as cases
 
 ...will become...
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <pipe label="" capture="">
       <case label="c1" cond="">Spam</case>
@@ -705,7 +705,7 @@ Make a pipe consisting of selected lines as cases
 
 Add values to cells from low to high
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>avl
 
@@ -717,7 +717,7 @@ Add values to cells from low to high
 
 ...will become...
 
-.. code-block::
+.. code-block:: xml+cheetah
 
       <col label="c1" value="1">Spammy<br/>1</col>
       <col label="c2" value="2">2</col>
@@ -729,7 +729,7 @@ Add values to cells from low to high
 
 Add values to cells from high to low
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>avh
 
@@ -741,7 +741,7 @@ Add values to cells from high to low
 
 ...will become...
 
-.. code-block::
+.. code-block:: xml+cheetah
 
       <col label="c5" value="5">Very Spammy<br/>5</col>
       <col label="c4" value="4">4</col>
@@ -753,7 +753,7 @@ Add values to cells from high to low
 
 Add groups to cells
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>ag
 
@@ -763,7 +763,7 @@ Add groups to cells
 
 ...will become...
 
-.. code-block::
+.. code-block:: xml+cheetah
 
       <row label="a" groups="g1">King Arthur</row>
       <row label="b" groups="g1">Launcelot</row>
@@ -773,7 +773,7 @@ Add groups to cells
 
 Add alts to cells and title. Which ever is contained in the visual selection.
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>aa
 
@@ -791,7 +791,7 @@ Add alts to cells and title. Which ever is contained in the visual selection.
 
 ...will become...
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <text label="Q1" optional="0">
       <title>
@@ -812,7 +812,7 @@ Add alts to cells and title. Which ever is contained in the visual selection.
 
 Create a question comment
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>qc
 
@@ -820,7 +820,7 @@ Create a question comment
 
 ...will become...
 
-.. code-block::
+.. code-block:: xml+cheetah
 
       <comment>Please select one spam</comment>
 
@@ -828,7 +828,7 @@ Create a question comment
 
 Escape ``< and >`` characters into ``&lt; and &gt;``
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>es
 
@@ -836,7 +836,7 @@ Escape ``< and >`` characters into ``&lt; and &gt;``
 
 ...will become...
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     Green eggs and &lt;em&gt;spam&lt;/em&gt;
 
@@ -844,7 +844,7 @@ Escape ``< and >`` characters into ``&lt; and &gt;``
 
 Comment out some text from the xml
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>hc
 
@@ -852,7 +852,7 @@ Comment out some text from the xml
 
 ...will become...
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <!--
     I have to push the pram a lot. 
@@ -863,7 +863,7 @@ Comment out some text from the xml
 Pull text node value into a configurable style attribute. This is useful when you want to use row text,
 but avoid translation problems.
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>me
 
@@ -873,7 +873,7 @@ but avoid translation problems.
 
 ...will become...
 
-.. code-block::
+.. code-block:: xml+cheetah
 
       <row label="r1" cs:extra="Spam" >Spam</row>
       <row label="r2" cs:extra="Ham"  >Ham</row>
@@ -884,7 +884,7 @@ but avoid translation problems.
 
 HTML escape spaces. This is very useful when dealing with macro arguments which are space delimited 
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>qs
 
@@ -892,7 +892,7 @@ HTML escape spaces. This is very useful when dealing with macro arguments which 
 
 ...will become...
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     That&#32;parrot&#32;is&#32;dead
 
@@ -900,7 +900,7 @@ HTML escape spaces. This is very useful when dealing with macro arguments which 
 
 Strip text nodes from selected cells
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>st
 
@@ -915,7 +915,7 @@ Strip text nodes from selected cells
 
 ...will become...
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     Spammy<br/>1
     2
@@ -930,7 +930,7 @@ Strip text nodes from selected cells
 
 Switch back and forth between cols and rows
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>sw
 
@@ -940,7 +940,7 @@ Switch back and forth between cols and rows
 
 ...will become...
 
-.. code-block::
+.. code-block:: xml+cheetah
 
       <col label="c1">Spam</col>
       <col label="c2">Spam Spam</col>
@@ -950,7 +950,7 @@ Switch back and forth between cols and rows
 
 URL escape selection. This very handy in passing text to certain swf's that do not do this themselves.
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>qu
 
@@ -958,7 +958,7 @@ URL escape selection. This very handy in passing text to certain swf's that do n
 
 ...will become...
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     No%2C%20now%20go%20away%20or%20I%20shall%20taunt%20you%20a%20second%20time.%20
 
@@ -966,7 +966,7 @@ URL escape selection. This very handy in passing text to certain swf's that do n
 
 Clean out common utf-8 chars and remove excessive tabs and newlines
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     <leader>cl
 
@@ -974,6 +974,6 @@ Clean out common utf-8 chars and remove excessive tabs and newlines
 
 ...will become...
 
-.. code-block::
+.. code-block:: xml+cheetah
 
     '"HAM"-"SPAM"&amp;"EGGS"'...
