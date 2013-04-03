@@ -125,6 +125,65 @@ to discover differences between repeating items in a questionnaire.
 
     <leader>dif
 
+**CommentBlocks**
+
+Add ``<!-- EO block -->`` style comments to the end of blocks for easier navigation of nested block trees
+
+.. code-block:: xml+cheetah
+
+    <leader>cb
+
+    <block label="spam_block" randomizeChildren="0" cond="1">
+    <radio label="Q1">
+        <title>
+        What would you like to eat?
+        </title>
+        <comment>Please select one</comment>
+        <row label="r1">Ham</row>
+        <row label="foo">Spam</row>
+        <row label="r3">bar Eggs</row>
+        <row label="r42">Bacon</row>
+    </radio>
+    <suspend/>
+    </block>
+
+...will become...
+
+.. code-block:: xml+cheetah
+
+    <block label="spam_block" randomizeChildren="0" cond="1">
+    <radio label="Q1">
+        <title>
+        What would you like to eat?
+        </title>
+        <comment>Please select one</comment>
+        <row label="r1">Ham</row>
+        <row label="foo">Spam</row>
+        <row label="r3">bar Eggs</row>
+        <row label="r42">Bacon</row>
+    </radio>
+    <suspend/>
+    </block>
+    <!-- EO spam_block -->
+
+**AttrSpacing**
+
+Justifies the spacing of attributes accross multiple xml elements
+
+.. code-block:: xml+cheetah
+
+    <row label="ham" cs:extra="HAM"  >HAM</row>
+    <row label="spam" cs:extra="SPAM" >SPAM</row>
+    <row label="r3" cs:extra="BACON" exclusive="1" randomize="0">BACON</row>
+
+...will become...
+
+.. code-block:: xml+cheetah
+
+    <row label="ham"  cs:extra="HAM"  >HAM</row>
+    <row label="spam" cs:extra="SPAM" >SPAM</row>
+    <row label="r3"   cs:extra="BACON" exclusive="1" randomize="0">BACON</row>
+
 **CleanNotes**
 
 To clean aggregated tasks in the form of ``<!-- XXX [foo]: bar -->``
