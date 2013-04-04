@@ -5,16 +5,16 @@ import re
 
 
 def element_factory(selection, elType='radio', comment='', attrs=None):
-    """This function returns a v2 xml Element as a string
+    """Return an xml v2-Element as a list of strings
 
     Args:
         selection (list): Lines of text to be processed
     Kwargs:
-        elType  (string): The name of the main xml element. i.e. radio
-        comment (string): Text to be used as the comment
+        elType  (string): The name of the main xml element. e.g. `radio`
+        comment (string): Text to be used in the comment cell
         attrs     (dict): Attributes to be added to the main xml element
-    Returns:
-        string. The formatted v2 xml Element
+    Return:
+        list. List of strings making up the formatted v2-Element
     """
     attrs = {} if attrs is None else attrs
     selection = [line.rstrip() for line in selection if line.strip()]
@@ -29,7 +29,10 @@ def element_factory(selection, elType='radio', comment='', attrs=None):
     if label[0].isdigit():
         label = 'Q' + label
 
+    # remove possible label delimiters
     label = re.sub(r'(\.$|[\(\):])', '', label)
+
+    # dashes and periods become underscores
     label = re.sub(r'[-\.]', '_', label)
 
     template = '\n'.join(("<%(elType)s label=\"%(label)s\">",
@@ -57,16 +60,21 @@ def element_factory(selection, elType='radio', comment='', attrs=None):
 
 
 def cell_factory(selection, cellType, prefix='', attrs=None):
-    """This function returns a v2 xml Cell as a string
+    """Return a series of xml v2-Cells as a list of strings
 
     Args:
         selection (list): Lines of text to be processed
-        cellType  (string): The name of the v2 Cell. i.e. row/col
+        cellType  (string): The name of the v2-Cell. e.g. `row/col`
     Kwargs:
-        prefix (string): Text to be prefixed to the cell's label i.e. r1/c1
-    Returns:
-        string. The formatted Decipher xml Cell
+        prefix (string): Text to be prefixed to the
+        v2-Cell's label e.g. `r1/c1`
+    Return:
+        list. List of strings making up the formatted v2-Cells
     """
+    cellTemplate = ('  <%(cellType)s label="%(label)s">'
+                    '%(cell)s'
+                    '</%(cellType)s>')
+
     attrs = {} if attrs is None else attrs
     selection = [line.strip() for line in selection if line.strip()]
     label_rgx = re.compile("^\[?([a-zA-Z0-9_]{1,6})\]?\.\s{1,}")
@@ -81,7 +89,7 @@ def cell_factory(selection, cellType, prefix='', attrs=None):
                 label = prefix + label
         else:
             label = prefix + str(i + 1)
-        cells.append("""  <%(cellType)s label="%(label)s">%(cell)s</%(cellType)s>""" %
+        cells.append(cellTemplate %
                      dict(cellType=cellType, label=label, cell=cell))
 
     attrs_str = " ".join('%s="%s"' % (k, v) for k, v in attrs.items())
@@ -94,48 +102,62 @@ def cell_factory(selection, cellType, prefix='', attrs=None):
 
 
 def exclusify(lines):
-    """This function guesses and adds appropriate attributes for exclusive cells
-    It only processes the last v2 Cell in a v2 Element
+    """Add exclusive attributes to applicable v2-Cells
+    Only processes the last v2-Cell (third to last line)
 
     Args:
-        lines (list): Lines of text constituting a v2 Element
-    Returns:
-        string. v2 Element with possibly exclusified last Cell
+        lines (list): Lines of text constituting a v2-Element
+    Return:
+        list. List of strings making up the formatted v2-Element
     """
-    rgx = re.compile("""(.*None of.*)|(.*Decline to answer.*)|(.*>None<.*)|(.*Don't know.*)|(.*Not sure.*)""", re.I)
-    if rgx.match(lines[-3]):
+    exclusiveTxts = ('None of.*',
+                     'Decline to answer',
+                     'None',
+                     'Don\'t know',
+                     'Not sure')
+
+    rgxString = '|'.join('(>{0}<)'.format(text) for text in exclusiveTxts)
+    rgx = re.compile(rgxString, re.I)
+
+    if rgx.search(lines[-3]):
         lines[-3] = lines[-3].replace('>', ' exclusive="1" randomize="0">', 1)
+
     return lines
 
 
 def openify(lines):
-    """This function guesses and adds appropriate attributes for open-end cells
+    """Add open-end attributes to applicable v2-Cells
 
     Args:
-        lines (list): Lines of text constituting a v2 Element
-    Returns:
-        string. v2 Element with possibly openified last Cell
+        lines (list): Lines of text constituting a v2-Element
+    Return:
+        list. List of strings making up the formatted v2-Element
     """
+    openAttrs = ' open="1" openSize="25" randomize="0">'
+
     rgx = re.compile(r'.*Other.*\(?\s*Specify[\s:]*\)?.*', re.I)
+
     for i, line in enumerate(lines):
         if rgx.match(line):
+
+            # remove place holder underscores
             line = re.sub('_{2,}', '', line)
-            lines[i] = line.replace('>', ' open="1" openSize="25" randomize="0">', 1)
+
+            lines[i] = line.replace('>', openAttrs, 1)
+
     return lines
 
 
 def get_visual_selection(lines, start, end):
-    r"""This function takes a list of lines and two coordinates
-     ``e.g. (1,0) denoting first line, first char``. 
-     It then collapses the lines into a \n joined string and splits
-     into before, inside, and after the coordinates' intersection.
-     *Supports multiple lines*
+    """Split an arbitrary selection of text between lines
 
     Args:
-        lines (list): Lines of text to be processed
-        start (tuple): Coordinates of the start of a selection 
-        end (tuple): Coordinates of the end of a selection 
-    Returns:
+        lines  (list): Lines of text to be processed
+        start (tuple): Coordinates of the start of a selection
+                       in format (line, char)
+        end   (tuple): Coordinates of the end of a selection
+                       in format (line, char)
+    Return:
         tuple of strings. (before, inside, after)
     """
     before = lines[0][:start[1]]
@@ -145,12 +167,15 @@ def get_visual_selection(lines, start, end):
 
 
 def clean_attribute_spacing(lines):
-    """This function justifies the spacing of attributes accross multiple xml elements
+    """Justify the spacing of attributes accross multiple xml elements
+
+    This is accomplished by adding spaces to the attributes smaller
+    than the largest of its type.
 
     Args:
-        lines (string): Lines of xml
-    Returns:
-        string. xml with justified attributes
+        lines (string): Lines of xml to process
+    Return:
+        list. Lines of text/xml with justified attributes
     """
     lines = [re.sub(r'\s+>', '>', line) for line in lines if line.strip()]
 
@@ -169,10 +194,10 @@ def clean_attribute_spacing(lines):
         if attrs:
             for name, value in attrs:
                 largestValue = attrDict.setdefault(name, len(value))
-                if len(value) > largestValue: 
+                if len(value) > largestValue:
                     attrDict[name] = len(value)
 
-    output = []
+    xmlOut = []
     for line in lines:
         attrs = attributes_rgx.findall(line)
         for name, value in attrs:
@@ -181,6 +206,6 @@ def clean_attribute_spacing(lines):
                 attr = '{0}="{1}"'.format(name, value)
                 padding = (maxValueLen - len(value)) * ' '
                 line = line.replace(attr, attr + padding)
-        output.append(margin + line.lstrip())
+        xmlOut.append(margin + line.lstrip())
 
-    return output
+    return xmlOut

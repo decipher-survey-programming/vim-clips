@@ -105,7 +105,8 @@ class TestFactories(unittest.TestCase):
         testTitles =   ('Q1. SPAM',
                         'Q2: EGGS',
                         '(Q3) HAM',
-                        'Q3.1 BACON')
+                        'Q3.1 BACON',
+                        'Q4. Q4. Q4.')
         resultXMLs = []
         for title in testTitles:
             resultXMLs.append(decipher.element_factory([title], 'radio', '', {}))
@@ -113,7 +114,8 @@ class TestFactories(unittest.TestCase):
         cleanedTitles =   (('Q1', 'SPAM'),
                            ('Q2', 'EGGS'),
                            ('Q3', 'HAM'),
-                           ('Q3_1', 'BACON'))
+                           ('Q3_1', 'BACON'),
+                           ('Q4', 'Q4. Q4.'))
 
         expectedXMLs = []
         for label, title in cleanedTitles:
