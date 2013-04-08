@@ -95,17 +95,17 @@ try:
         """
         Surround vbuffer in new-survey template with sane defaults
         """
-        COMPAT = 113
+        COMPAT = 115
 
         header = ['<?xml version="1.0" encoding="UTF-8"?>',
                   '<survey name="Survey"',
                   '    alt=""',
                   '    autosave="0"',
-                  '    extraVariables="source,list,url,record,ipAddress,userAgent"',
+                  '    extraVariables="source,list,url,record,ipAddress,userAgent,decLang"',
                   '    compat="%d"' % COMPAT,
                   '    state="testing"',
                   '    newVirtual="1"',
-                  '    setup="time,quota,term"',
+                  '    setup="time,quota,term,decLang"',
                   '    ss:disableBackButton="1"',
                   '    unmacro="0"',
                   '    displayOnError="all"',
