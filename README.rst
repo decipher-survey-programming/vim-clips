@@ -172,6 +172,8 @@ Justifies the spacing of attributes accross multiple xml elements
 
 .. code-block:: xml+cheetah
 
+    <leader>as
+
     <row label="ham" cs:extra="HAM"  >HAM</row>
     <row label="spam" cs:extra="SPAM" >SPAM</row>
     <row label="r3" cs:extra="BACON" exclusive="1" randomize="0">BACON</row>
