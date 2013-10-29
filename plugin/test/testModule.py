@@ -15,9 +15,7 @@ def clean_xml(text):
 class TestFactories(unittest.TestCase):
     def setUp(self):
         self.elementTemplate = '\n'.join(('<{type} label="{label}"{extra}>',
-                                          '  <title>',
-                                          '    {title}',
-                                          '  </title>',
+                                          '  <title>{title}</title>',
                                           '  <comment>{comment}</comment>',
                                           '{content}',
                                           '</{type}>',
@@ -25,9 +23,7 @@ class TestFactories(unittest.TestCase):
 
     def testElementFactory(self):
         template = ('<{type} label="{label}"{extra}>'
-                    '  <title>'
-                    '    {title}'
-                    '  </title>'
+                    '  <title>{title}</title>'
                     '  <comment>{comment}</comment>'
                     '  {content}'
                     '</{type}>'

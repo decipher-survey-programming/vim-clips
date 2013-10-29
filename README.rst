@@ -135,9 +135,7 @@ Add ``<!-- EO block -->`` style comments to the end of blocks for easier navigat
 
     <block label="spam_block" randomizeChildren="0" cond="1">
     <radio label="Q1">
-        <title>
-        What would you like to eat?
-        </title>
+        <title>What would you like to eat?</title>
         <comment>Please select one</comment>
         <row label="r1">Ham</row>
         <row label="foo">Spam</row>
@@ -153,9 +151,7 @@ Add ``<!-- EO block -->`` style comments to the end of blocks for easier navigat
 
     <block label="spam_block" randomizeChildren="0" cond="1">
     <radio label="Q1">
-        <title>
-        What would you like to eat?
-        </title>
+        <title>What would you like to eat?</title>
         <comment>Please select one</comment>
         <row label="r1">Ham</row>
         <row label="foo">Spam</row>
@@ -387,9 +383,7 @@ Make radio element
 .. code-block:: xml+cheetah
 
     <radio label="Q1">
-      <title>
-        Which is your favorite?
-      </title>
+      <title>Which is your favorite?</title>
       <comment>Please select one</comment>
       <row label="r1">Ham</row>
       <row label="foo">Spam</row>
@@ -421,9 +415,7 @@ Make radio-rating element
 .. code-block:: xml+cheetah
 
     <radio label="Q1" averages="cols" values="order" adim="rows" type="rating">
-      <title>
-        Please rate each item by it's spam factor
-      </title>
+      <title>Please rate each item by it's spam factor</title>
       <comment>Please select one for each row</comment>
       <col label="c1">Spammy<br/>1</col>
       <col label="c2">2</col>
@@ -455,9 +447,7 @@ Make checkbox element
 .. code-block:: xml+cheetah
 
     <checkbox label="Q1" atleast="1">
-      <title>
-        What would you like?
-      </title>
+      <title>What would you like?</title>
       <comment>Please select all that apply</comment>
       <row label="r1">Ham</row>
       <row label="foo">Spam</row>
@@ -489,9 +479,7 @@ Make select element
 .. code-block:: xml+cheetah
     
     <select label="Q1" optional="0">
-      <title>
-        Select your quantity of each...
-      </title>
+      <title>Select your quantity of each...</title>
       <comment>Please select one for each selection</comment>
       <choice label="ch1">0</choice>
       <choice label="ch2">1</choice>
@@ -523,9 +511,7 @@ Make number element
 .. code-block:: xml+cheetah
 
     <number label="Q1" optional="0" size="3">
-      <title>
-        Enter desired quantity for each item...
-      </title>
+      <title>Enter desired quantity for each item...</title>
       <comment>Please enter a whole number</comment>
       <row label="r1">Ham</row>
       <row label="foo">Spam</row>
@@ -549,9 +535,7 @@ Make float element
 .. code-block:: xml+cheetah
 
     <float label="Q1" optional="0" size="3">
-      <title>
-        What... is the air-speed velocity of an unladen swallow?
-      </title>
+      <title>What... is the air-speed velocity of an unladen swallow?</title>
       <comment>Please enter a number</comment>
     </float>
     <suspend/>
@@ -575,9 +559,7 @@ Make text element
 .. code-block:: xml+cheetah
 
     <text label="Q1" optional="0">
-      <title>
-        Please explain your love for the following...
-      </title>
+      <title>Please explain your love for the following...</title>
       <comment>Please be as specific as possible</comment>
       <row label="r1">Ham</row>
       <row label="foo">Spam</row>
@@ -601,9 +583,7 @@ Make textarea element
 .. code-block:: xml+cheetah
 
     <textarea label="Q42" optional="0">
-      <title>
-        Briefly describe the ultimate question of life, the universe, and everything
-      </title>
+      <title>Briefly describe the ultimate question of life, the universe, and everything</title>
       <comment>Please be as specific as possible</comment>
     </textarea>
     <suspend/>
@@ -806,9 +786,7 @@ Add alts to cells and title. Which ever is contained in the visual selection.
     <leader>aa
 
     <text label="Q1" optional="0">
-      <title>
-        Please explain your love for the following...
-      </title>
+      <title>Please explain your love for the following...</title>
       <comment>Please be as specific as possible</comment>
       <row label="r1">${res.spam1}</row>
       <row label="r2">${res.spam2}</row>
@@ -822,12 +800,8 @@ Add alts to cells and title. Which ever is contained in the visual selection.
 .. code-block:: xml+cheetah
 
     <text label="Q1" optional="0">
-      <title>
-        Please explain your love for the following...
-      </title>
-      <alt>
-        Please explain your love for the following...
-      </alt>
+      <title>Please explain your love for the following...</title>
+      <alt>Please explain your love for the following...</alt>
       <comment>Please be as specific as possible</comment>
       <row label="r1"><alt>${res.spam1}</alt>${res.spam1}</row>
       <row label="r2"><alt>${res.spam2}</alt>${res.spam2}</row>

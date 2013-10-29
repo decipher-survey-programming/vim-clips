@@ -1082,19 +1082,13 @@ try:
 
         .. code-block::xml
 
-            <title>
-              What is your favorite color?
-            </title>
+            <title>What is your favorite color?</title>
             <row label="r1">Blue</row>
             <row label="r2">Green</row>
             <row label="r3">Red</row>
 
-            <title>
-              What is your favorite color?
-            </title>
-            <alt>
-              What is your favorite color?
-            </alt>
+            <title>What is your favorite color?</title>
+            <alt>What is your favorite color?</alt>
             <row label="r1"><alt>Blue</alt>Blue</row>
             <row label="r2"><alt>Green</alt>Green</row>
             <row label="r3"><alt>Red</alt>Red</row>

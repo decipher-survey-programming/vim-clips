@@ -36,9 +36,7 @@ def element_factory(selection, elType='radio', comment='', attrs=None):
     label = re.sub(r'[-\.]', '_', label)
 
     template = '\n'.join(("<%(elType)s label=\"%(label)s\">",
-                          "  <title>",
-                          "    %(title)s",
-                          "  </title>",
+                          "  <title>%(title)s</title>",
                           "%(selection)s",
                           "</%(elType)s>",
                           "<suspend/>"))

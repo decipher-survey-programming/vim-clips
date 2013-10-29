@@ -175,9 +175,7 @@ class TestClipFunctions(unittest.TestCase):
         elementMade = MakeRadio(vbuffer)
 
         elementExpected = ['<radio label="Q1">',
-                           '  <title>',
-                           '    What would you like to eat?',
-                           '  </title>',
+                           '  <title>What would you like to eat?</title>',
                            '  <comment>Please select one</comment>',
                            '  <row label="r1">Ham</row>',
                            '  <row label="foo">Spam</row>',
@@ -195,9 +193,7 @@ class TestClipFunctions(unittest.TestCase):
         elementMade = MakeCheckbox(vbuffer)
 
         elementExpected = ['<checkbox label="Q1" atleast="1">',
-                           '  <title>',
-                           '    What would you like to eat?',
-                           '  </title>',
+                           '  <title>What would you like to eat?</title>',
                            '  <comment>Please select all that apply</comment>',
                            '  <row label="r1">Ham</row>',
                            '  <row label="foo">Spam</row>',
@@ -218,9 +214,7 @@ class TestClipFunctions(unittest.TestCase):
         elementMade = MakeSelect(vbuffer)
 
         elementExpected = ['<select label="Q1" optional="0">',
-                        '  <title>',
-                        '    What would you like to eat?',
-                        '  </title>',
+                        '  <title>What would you like to eat?</title>',
                         '  <comment>Please select one for each selection</comment>',
                         '  <row label="r1">Course 1</row>',
                         '  <row label="r2">Course 2</row>',
@@ -241,9 +235,7 @@ class TestClipFunctions(unittest.TestCase):
         elementMade = MakeNumber(vbuffer)
 
         elementExpected = ['<number label="Q1" optional="0" size="3">',
-                           '  <title>',
-                           '    How many of each would you like?',
-                           '  </title>',
+                           '  <title>How many of each would you like?</title>',
                            '  <comment>Please enter a whole number</comment>',
                            '  <row label="r1">Ham</row>',
                            '  <row label="foo">Spam</row>',
@@ -261,9 +253,7 @@ class TestClipFunctions(unittest.TestCase):
         elementMade = MakeFloat(vbuffer)
 
         elementExpected = ['<float label="Q1" optional="0" size="3">',
-                           '  <title>',
-                           '    How many of each would you like?',
-                           '  </title>',
+                           '  <title>How many of each would you like?</title>',
                            '  <comment>Please enter a number</comment>',
                            '  <row label="r1">Ham</row>',
                            '  <row label="foo">Spam</row>',
@@ -282,9 +272,7 @@ class TestClipFunctions(unittest.TestCase):
         elementMade = MakeText(vbuffer)
 
         elementExpected = ['<text label="A" optional="0">',
-                           '  <title>',
-                           '    Please explain your love for the following...',
-                           '  </title>',
+                           '  <title>Please explain your love for the following...</title>',
                            '  <comment>Please be as specific as possible</comment>',
                            '  <row label="r1">Ham</row>',
                            '  <row label="foo">Spam</row>',
@@ -302,9 +290,7 @@ class TestClipFunctions(unittest.TestCase):
         elementMade = MakeTextarea(vbuffer)
 
         elementExpected = ['<textarea label="A" optional="0">',
-                           '  <title>',
-                           '    Please explain your love for the following...',
-                           '  </title>',
+                           '  <title>Please explain your love for the following...</title>',
                            '  <comment>Please be as specific as possible</comment>',
                            '  <row label="r1">Ham</row>',
                            '  <row label="foo">Spam</row>',
@@ -338,9 +324,7 @@ class TestClipFunctions(unittest.TestCase):
         elementMade = MakeRating(vbuffer)
 
         elementExpected = ['<radio label="Q1" averages="cols" values="order" adim="rows" type="rating">',
-                           '  <title>',
-                           '    What would you like to eat?',
-                           '  </title>',
+                           '  <title>What would you like to eat?</title>',
                            '  <comment>Please select one</comment>',
                            '  <row label="r1">Ham</row>',
                            '  <row label="foo">Spam</row>',
@@ -501,9 +485,7 @@ class TestClipFunctions(unittest.TestCase):
 
     def test_AddAlts(self):
         element = ['<radio label="Q1" averages="cols" values="order" adim="rows" type="rating">',
-                   '  <title>',
-                   '    What would you like to eat?',
-                   '  </title>',
+                   '  <title>What would you like to eat?</title>',
                    '  <comment>Please select one</comment>',
                    '  <row label="r1">Ham</row>',
                    '  <row label="foo">Spam</row>',
@@ -513,12 +495,8 @@ class TestClipFunctions(unittest.TestCase):
                    '<suspend/>']
 
         elementExpected = ['<radio label="Q1" averages="cols" values="order" adim="rows" type="rating">',
-                           '  <title>',
-                           '    What would you like to eat?',
-                           '  </title>',
-                           '  <alt>',
-                           '    What would you like to eat?',
-                           '  </alt>',
+                           '  <title>What would you like to eat?</title>',
+                           '  <alt>What would you like to eat?</alt>',
                            '  <comment>Please select one</comment>',
                            '  <row label="r1"><alt>Ham</alt>Ham</row>',
                            '  <row label="foo"><alt>Spam</alt>Spam</row>',
@@ -587,9 +565,7 @@ class TestClipFunctions(unittest.TestCase):
         elementExpected = ['<survey>',
                            '<block label="spam_block" randomizeChildren="0" cond="1">',
                            '<radio label="Q1">',
-                           '  <title>',
-                           '    What would you like to eat?',
-                           '  </title>',
+                           '  <title>What would you like to eat?</title>',
                            '  <comment>Please select one</comment>',
                            '  <row label="r1">Ham</row>',
                            '  <row label="foo">Spam</row>',
@@ -604,9 +580,7 @@ class TestClipFunctions(unittest.TestCase):
         elementSent = ['<survey>',
                        '<block label="spam_block" randomizeChildren="0" cond="1">',
                        '<radio label="Q1">',
-                       '  <title>',
-                       '    What would you like to eat?',
-                       '  </title>',
+                       '  <title>What would you like to eat?</title>',
                        '  <comment>Please select one</comment>',
                        '  <row label="r1">Ham</row>',
                        '  <row label="foo">Spam</row>',
