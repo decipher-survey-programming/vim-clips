@@ -95,7 +95,7 @@ try:
         """
         Surround vbuffer in new-survey template with sane defaults
         """
-        COMPAT = 115
+        COMPAT = 116
 
         header = ['<?xml version="1.0" encoding="UTF-8"?>',
                   '<survey name="Survey"',
@@ -105,6 +105,8 @@ try:
                   '    compat="%d"' % COMPAT,
                   '    state="testing"',
                   '    newVirtual="1"',
+                  '    mobile="compat"',
+                  '    mobileDevices="smartphone,tablet,featurephone,desktop"',
                   '    setup="time,quota,term,decLang"',
                   '    ss:disableBackButton="1"',
                   '    unmacro="0"',
