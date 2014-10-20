@@ -3,9 +3,9 @@ from lxml import etree
 import sys
 import re
 
-sys.path.append('../decipher')
+sys.path.append('../decipherclips')
 
-import decipher
+import decipherclips
 
 
 def clean_xml(text):
@@ -58,7 +58,7 @@ class TestFactories(unittest.TestCase):
         for e in testElements:
             elTest = clean_xml(format_real(*e))
             xmlTest = etree.fromstring('<root>{0}</root>'.format(elTest))
-            elReal = clean_xml(''.join(decipher.element_factory(*e)))
+            elReal = clean_xml(''.join(decipherclips.element_factory(*e)))
             xmlReal = etree.fromstring('<root>{0}</root>'.format(elReal))
             self.assertEqual(*map(etree.tostring, (xmlTest, xmlReal)))
 
@@ -66,7 +66,7 @@ class TestFactories(unittest.TestCase):
                        )
 
         for e in badElements:
-            self.assertRaises(Exception, decipher.element_factory, e)
+            self.assertRaises(Exception, decipherclips.element_factory, e)
 
 
     def testCellFactory(self):
@@ -91,7 +91,7 @@ class TestFactories(unittest.TestCase):
         for e in testCells:
             elTest = format_real(*e)
             xmlTest = etree.fromstring('<root>{0}</root>'.format(elTest))
-            elReal = ''.join(decipher.cell_factory(*e))
+            elReal = ''.join(decipherclips.cell_factory(*e))
             xmlReal = etree.fromstring('<root>{0}</root>'.format(elReal))
             xmlTest, xmlReal = map(etree.tostring, (xmlTest, xmlReal))
             xmlTest, xmlReal = map(clean_xml, (xmlTest, xmlReal))
@@ -105,7 +105,7 @@ class TestFactories(unittest.TestCase):
                         'Q4. Q4. Q4.')
         resultXMLs = []
         for title in testTitles:
-            resultXMLs.append(decipher.element_factory([title], 'radio', '', {}))
+            resultXMLs.append(decipherclips.element_factory([title], 'radio', '', {}))
 
         cleanedTitles =   (('Q1', 'SPAM'),
                            ('Q2', 'EGGS'),
@@ -131,7 +131,7 @@ class TestFactories(unittest.TestCase):
                                 '  <row label="spam">SPAM</row>',
                                 '  <row label="r3"  >BACON</row>']
 
-        self.assertEqual(decipher.clean_attribute_spacing(inputCellsRegular), expectedCellsRegular)
+        self.assertEqual(decipherclips.clean_attribute_spacing(inputCellsRegular), expectedCellsRegular)
 
         inputCellsExtra = ['  <row label="ham" cs:extra="HAM"  >HAM</row>',
                            '  <row label="spam" cs:extra="SPAM" >SPAM</row>',
@@ -141,4 +141,4 @@ class TestFactories(unittest.TestCase):
                               '  <row label="spam" cs:extra="SPAM" >SPAM</row>',
                               '  <row label="r3"   cs:extra="BACON" exclusive="1" randomize="0">BACON</row>']
 
-        self.assertEqual(decipher.clean_attribute_spacing(inputCellsExtra), expectedCellsExtra)
+        self.assertEqual(decipherclips.clean_attribute_spacing(inputCellsExtra), expectedCellsExtra)

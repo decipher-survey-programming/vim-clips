@@ -5,11 +5,11 @@ import sys
 import re
 from string import uppercase, lowercase
 from urllib import quote
-sys.path.append('../decipher')
-import decipher
+sys.path.append('../decipherclips')
+import decipherclips
 
 
-pyFlakes = (os, uppercase, lowercase, quote, decipher)
+pyFlakes = (os, uppercase, lowercase, quote, decipherclips)
 
 
 class ClipParserException(Exception):
