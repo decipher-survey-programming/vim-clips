@@ -99,6 +99,7 @@ try:
                   '<survey name="Survey"',
                   '    alt=""',
                   '    autosave="0"',
+                  '    browserDupes="safe"',
                   '    extraVariables="source,list,url,record,ipAddress,userAgent,decLang"',
                   '    compat="%d"' % COMPAT,
                   '    state="testing"',
@@ -625,9 +626,7 @@ try:
 
         lines = '\n'.join(' ' * INDENT + line for line in vrange if line.strip())
         htmlTemplate = ('<html label="" where="survey">',
-                        '  <p>',
                         '%s',
-                        '  </p>',
                         '</html>')
         htmlTemplate = '\n'.join(htmlTemplate)
 
