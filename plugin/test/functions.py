@@ -1,15 +1,15 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os
 import sys
 import re
-from string import uppercase, lowercase
+import string
 from urllib import quote
-sys.path.append('../decipherclips')
+
+sys.path.append('plugin/decipherclips')
 import decipherclips
 
 
-pyFlakes = (os, uppercase, lowercase, quote, decipherclips)
+FUNCTION_DEPS = (os, string.uppercase, string.lowercase, quote, decipherclips)
 
 
 class ClipParserException(Exception):
@@ -17,31 +17,34 @@ class ClipParserException(Exception):
 
 
 class ClipFunctionParser(object):
-    """Parses out functions from a .vim plugin placing all
-    parsed functions in global namespace"""
-    FUNC_RGX = re.compile(r'\s*def ([A-Z].*?)\(.*')  # testable funcs are capitalized FUPEP8
+    """Parses and compiles python functions from the vim plugin placing them in the global namespace"""
+    FUNC_RGX = re.compile(r'\s*def ([A-Z].*?)\(.*')  # testable funcs are capitalized
 
-    def __init__(self, clipPath):
+    def __init__(self, clip_path):
         try:
-            self.document = open(clipPath).readlines()
+            self.clip_lines = open(clip_path).readlines()
         except IOError:
-            msg = "Could not open plugin: {path}"
-            raise ClipParserException(msg.format(path=clipPath))
+            raise ClipParserException('Could not read plugin: {path}'.format(path=clip_path))
 
-    def get_indent(self, string):
-        return len(string) - len(string.lstrip())
+    def get_indent(self, s):
+        """Used to keep track of scope via white space
+
+        :param s:
+        :return: :rtype: int
+        """
+        return len(s) - len(s.lstrip())
 
     def parse(self):
         parsing = False
         capture = []
         indent = 0
 
-        for line in self.document:
+        for line in self.clip_lines:
             if parsing:
                 if line.strip() and self.get_indent(line) <= indent:
                     self._exec(''.join(capture))
-                    capture = []
                     parsing = False
+                    capture = []
                     indent = 0
                 else:
                     capture.append(line[indent:])
@@ -54,4 +57,4 @@ class ClipFunctionParser(object):
         exec(code, globals(), globals())
 
 
-ClipFunctionParser('../decipher_clips.vim').parse()
+ClipFunctionParser('plugin/decipher_clips.vim').parse()

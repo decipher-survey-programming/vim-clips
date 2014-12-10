@@ -5,7 +5,7 @@
 " See README.rst for additional information.
 "
 " Maintainer: Ryan Scarbery <ryan.scarbery@gmail.com>
-" Version: 0.1.1
+" Version: 0.1.2
 
 if !has('python')
     " exit if python is not available.
@@ -18,7 +18,7 @@ import os
 import sys
 import vim
 import re
-from string import uppercase, lowercase
+import string
 from urllib import quote
 moduleDir = os.path.join(os.path.dirname(vim.eval('expand("<sfile>")')), 'decipherclips')
 sys.path.append(moduleDir)
@@ -802,7 +802,7 @@ try:
                 raise SyntaxError("Cannot mix case. All letters must be UPPER or lower")
 
             for c in indices:
-                case = uppercase if firstChar.isupper() else lowercase
+                case = string.uppercase if firstChar.isupper() else string.lowercase
 
                 if '-' in c:
                     start, end = c.split('-')

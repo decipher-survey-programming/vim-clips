@@ -1,4 +1,4 @@
 SHELL := /bin/bash
 
 test:
-	cd plugin/test && trial testClips testModule
+	py.test plugin/test

@@ -1,9 +1,9 @@
-from twisted.trial import unittest
+import unittest
 from lxml import etree
 import sys
 import re
 
-sys.path.append('../decipherclips')
+sys.path.append('plugin/decipherclips')
 
 import decipherclips
 
@@ -46,14 +46,14 @@ class TestFactories(unittest.TestCase):
                                    comment=args[2],
                                    content=content)
 
-
-        testElements = ((['Q1 SPAM'], 'radio', 'comment', {}),
-                        (['Q2 SPAM'], 'checkbox', '', {}),
-                        (['Q3 SPAM'], 'select', '', dict(optional='0')),
-                        (['Q1 HAM'],  'checkbox', 'SPAM', {'EGGS': 'MORNING!'}),
-                        (['Q2 EGG'],  'BACON', 'SPAM', dict(a=1, b=2, c=3)),
-                        (['Q3 Anything without spam?', '<row label="r1">Spam</row>'],  'spam', '', dict(a=1, b=2, c=3)),
-                        )
+        testElements = (
+            (['Q1 SPAM'], 'radio', 'comment', {}),
+            (['Q2 SPAM'], 'checkbox', '', {}),
+            (['Q3 SPAM'], 'select', '', dict(optional='0')),
+            (['Q1 HAM'], 'checkbox', 'SPAM', {'EGGS': 'MORNING!'}),
+            (['Q2 EGG'], 'BACON', 'SPAM', dict(a=1, b=2, c=3)),
+            (['Q3 Anything without spam?', '<row label="r1">Spam</row>'], 'spam', '', dict(a=1, b=2, c=3)),
+        )
 
         for e in testElements:
             elTest = clean_xml(format_real(*e))
@@ -62,12 +62,12 @@ class TestFactories(unittest.TestCase):
             xmlReal = etree.fromstring('<root>{0}</root>'.format(elReal))
             self.assertEqual(*map(etree.tostring, (xmlTest, xmlReal)))
 
-        badElements = ((['SPAM'], 'radio', 'EGGS', {}),  # No label
-                       )
+        badElements = (
+            (['SPAM'], 'radio', 'EGGS', {}),  # No label
+        )
 
         for e in badElements:
             self.assertRaises(Exception, decipherclips.element_factory, e)
-
 
     def testCellFactory(self):
         template = '  <{0} label="{1}"{2}>{3}</{0}>'
@@ -83,10 +83,10 @@ class TestFactories(unittest.TestCase):
                 rows.append(template.format(args[1], args[2] + str(i + 1), attrs_str, line))
             return ' '.join(rows)
 
-
-        testCells = ((['SPAM BACON EGGS'], 'row', 'r', {}),
-                     (['SPAM', 'BACON', 'EGGS'], 'row', 'r', {}),
-                     )
+        testCells = (
+            (['SPAM BACON EGGS'], 'row', 'r', {}),
+            (['SPAM', 'BACON', 'EGGS'], 'row', 'r', {}),
+        )
 
         for e in testCells:
             elTest = format_real(*e)
@@ -98,20 +98,20 @@ class TestFactories(unittest.TestCase):
             self.assertEqual(xmlTest, xmlReal)
 
     def testCellFactoryLabelRgx(self):
-        testTitles =   ('Q1. SPAM',
-                        'Q2: EGGS',
-                        '(Q3) HAM',
-                        'Q3.1 BACON',
-                        'Q4. Q4. Q4.')
+        testTitles = ('Q1. SPAM',
+                      'Q2: EGGS',
+                      '(Q3) HAM',
+                      'Q3.1 BACON',
+                      'Q4. Q4. Q4.')
         resultXMLs = []
         for title in testTitles:
             resultXMLs.append(decipherclips.element_factory([title], 'radio', '', {}))
 
-        cleanedTitles =   (('Q1', 'SPAM'),
-                           ('Q2', 'EGGS'),
-                           ('Q3', 'HAM'),
-                           ('Q3_1', 'BACON'),
-                           ('Q4', 'Q4. Q4.'))
+        cleanedTitles = (('Q1', 'SPAM'),
+                         ('Q2', 'EGGS'),
+                         ('Q3', 'HAM'),
+                         ('Q3_1', 'BACON'),
+                         ('Q4', 'Q4. Q4.'))
 
         expectedXMLs = []
         for label, title in cleanedTitles:
@@ -121,11 +121,10 @@ class TestFactories(unittest.TestCase):
         for madeXML, expectedXML in zip(resultXMLs, expectedXMLs):
             self.assertEqual(madeXML, expectedXML)
 
-
     def test_clean_attribute_spacing(self):
-        inputCellsRegular =  ['  <row label="ham">HAM</row>',
-                              '  <row label="spam">SPAM</row>',
-                              '  <row label="r3">BACON</row>']
+        inputCellsRegular = ['  <row label="ham">HAM</row>',
+                             '  <row label="spam">SPAM</row>',
+                             '  <row label="r3">BACON</row>']
 
         expectedCellsRegular = ['  <row label="ham" >HAM</row>',
                                 '  <row label="spam">SPAM</row>',

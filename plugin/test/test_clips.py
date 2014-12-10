@@ -1,39 +1,39 @@
 # -*- coding: utf-8 -*-
-from twisted.trial import unittest
-from util import (NewSurvey,
-                  CleanUp,
-                  Rows,
-                  Cols,
-                  Choice,
-                  Rates,
-                  Case,
-                  NoAnswer,
-                  Resource,
-                  MakeRadio,
-                  MakeCheckbox,
-                  MakeSelect,
-                  MakeNumber,
-                  MakeFloat,
-                  MakeText,
-                  MakeTextarea,
-                  MakeHTML,
-                  MakeRating,
-                  MakeNets,
-                  MakeGroups,
-                  MakeExtras,
-                  MakeOrs,
-                  AddValuesLow,
-                  AddValuesHigh,
-                  Switcher,
-                  SwitchRating,
-                  AddGroups,
-                  CommentQuestion,
-                  HTMLComment,
-                  AddAlts,
-                  Strip,
-                  Justify,
-                  CleanNotes,
-                  CommentBlocks)
+import unittest
+from functions import (NewSurvey,
+                       CleanUp,
+                       Rows,
+                       Cols,
+                       Choice,
+                       Rates,
+                       Case,
+                       NoAnswer,
+                       Resource,
+                       MakeRadio,
+                       MakeCheckbox,
+                       MakeSelect,
+                       MakeNumber,
+                       MakeFloat,
+                       MakeText,
+                       MakeTextarea,
+                       MakeHTML,
+                       MakeRating,
+                       MakeNets,
+                       MakeGroups,
+                       MakeExtras,
+                       MakeOrs,
+                       AddValuesLow,
+                       AddValuesHigh,
+                       Switcher,
+                       SwitchRating,
+                       AddGroups,
+                       CommentQuestion,
+                       HTMLComment,
+                       AddAlts,
+                       Strip,
+                       Justify,
+                       CleanNotes,
+                       CommentBlocks)
 
 
 class TestClipFunctions(unittest.TestCase):
@@ -55,6 +55,7 @@ class TestClipFunctions(unittest.TestCase):
                             '<survey name="Survey"',
                             '    alt=""',
                             '    autosave="0"',
+                            '    browserDupes="safe"',
                             '    extraVariables="source,list,url,record,ipAddress,userAgent,decLang"',
                             '    compat="116"',
                             '    state="testing"',
@@ -141,12 +142,12 @@ class TestClipFunctions(unittest.TestCase):
     def test_Case(self):
         cellsMade = Case(self.cells)
         cellsExpected = ['<pipe label="" capture="">',
-                        '  <case label="c1" cond="">Ham</case>',
-                        '  <case label="foo" cond="">Spam</case>',
-                        '  <case label="c3" cond="">bar Eggs</case>',
-                        '  <case label="c42" cond="">Bacon</case>',
-                        '  <case label="c99" cond="1">BAD PIPE</case>',
-                        '</pipe>']
+                         '  <case label="c1" cond="">Ham</case>',
+                         '  <case label="foo" cond="">Spam</case>',
+                         '  <case label="c3" cond="">bar Eggs</case>',
+                         '  <case label="c42" cond="">Bacon</case>',
+                         '  <case label="c99" cond="1">BAD PIPE</case>',
+                         '</pipe>']
 
         self.assertEqual(cellsMade, cellsExpected)
 
@@ -216,17 +217,17 @@ class TestClipFunctions(unittest.TestCase):
         elementMade = MakeSelect(vbuffer)
 
         elementExpected = ['<select label="Q1" optional="0">',
-                        '  <title>What would you like to eat?</title>',
-                        '  <comment>Please select one for each selection</comment>',
-                        '  <row label="r1">Course 1</row>',
-                        '  <row label="r2">Course 2</row>',
-                        '  <row label="r3">Course 3</row>',
-                        '  <choice label="ch1">Ham</choice>',
-                        '  <choice label="foo">Spam</choice>',
-                        '  <choice label="ch3">bar Eggs</choice>',
-                        '  <choice label="ch42">Bacon</choice>',
-                        '</select>',
-                        '<suspend/>']
+                           '  <title>What would you like to eat?</title>',
+                           '  <comment>Please select one for each selection</comment>',
+                           '  <row label="r1">Course 1</row>',
+                           '  <row label="r2">Course 2</row>',
+                           '  <row label="r3">Course 3</row>',
+                           '  <choice label="ch1">Ham</choice>',
+                           '  <choice label="foo">Spam</choice>',
+                           '  <choice label="ch3">bar Eggs</choice>',
+                           '  <choice label="ch42">Bacon</choice>',
+                           '</select>',
+                           '<suspend/>']
 
         self.assertEqual(elementMade, elementExpected)
 
@@ -309,11 +310,9 @@ class TestClipFunctions(unittest.TestCase):
                 "Lovely spam! Lovely spam! Lovely spam! Lovely spam! Lovely spam! Spam spam spam spam!"]
 
         linesExpected = ['<html label="" where="survey">',
-                        '  <p>',
-                        '    Spam spam spam spam. Lovely spam! Wonderful spam! Spam spa-a-a-a-a-am spam spa-a-a-a-a-am spam.',
-                        '    Lovely spam! Lovely spam! Lovely spam! Lovely spam! Lovely spam! Spam spam spam spam!',
-                        '  </p>',
-                        '</html>']
+                         '    Spam spam spam spam. Lovely spam! Wonderful spam! Spam spa-a-a-a-a-am spam spa-a-a-a-a-am spam.',
+                         '    Lovely spam! Lovely spam! Lovely spam! Lovely spam! Lovely spam! Spam spam spam spam!',
+                         '</html>']
 
         linesMade = MakeHTML(text)
 
@@ -356,7 +355,7 @@ class TestClipFunctions(unittest.TestCase):
                          '  <group label="g42">Bacon</group>']
 
         self.assertEqual(linesMade, linesExpected)
- 
+
 
     def test_MakeExtras(self):
         linesMade = MakeExtras(Rows(self.cells))
@@ -506,7 +505,7 @@ class TestClipFunctions(unittest.TestCase):
                            '  <row label="r42"><alt>Bacon</alt>Bacon</row>',
                            '</radio>',
                            '<suspend/>']
-        
+
         self.assertEquals(AddAlts(element), elementExpected)
 
 
