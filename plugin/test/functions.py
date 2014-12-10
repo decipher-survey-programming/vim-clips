@@ -6,6 +6,7 @@ import string
 from urllib import quote
 
 sys.path.append('plugin/decipherclips')
+# noinspection PyUnresolvedReferences
 import decipherclips
 
 

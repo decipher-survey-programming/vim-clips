@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import unittest
+
+# noinspection PyUnresolvedReferences
 from functions import (NewSurvey,
                        CleanUp,
                        Rows,
