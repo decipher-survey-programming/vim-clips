@@ -93,7 +93,7 @@ try:
         """
         Surround vbuffer in new-survey template with sane defaults
         """
-        COMPAT = 116
+        COMPAT = 126
 
         header = ['<?xml version="1.0" encoding="UTF-8"?>',
                   '<survey name="Survey"',
@@ -103,27 +103,29 @@ try:
                   '    extraVariables="source,list,url,record,ipAddress,userAgent,decLang"',
                   '    compat="%d"' % COMPAT,
                   '    state="testing"',
-                  '    newVirtual="1"',
                   '    mobile="compat"',
                   '    mobileDevices="smartphone,tablet,featurephone,desktop"',
                   '    setup="time,quota,term,decLang"',
+                  '    fir="on"',
                   '    ss:disableBackButton="1"',
                   '    unmacro="0"',
+                  '    ss:logoFile=""',
+                  '    ss:logoPosition="left"',
                   '    displayOnError="all"',
                   '    unique="">',
                   '',
-                  '',
                   '<samplesources default="1">',
-                  '  <samplesource list="1" title="default">',
-                  '    <exit cond="qualified"><b>Thanks again for completing the survey!<br/><br/>Your feedback and quick response to this survey are greatly appreciated.</b></exit>',
-                  '    <exit cond="terminated"><b>Thank you for your selection!</b></exit>',
-                  '    <exit cond="overquota"><b>Thank you for your selection!</b></exit>',
+                  '  <samplesource list="1">',
+                  '    <completed>It seems you have already entered this survey.</completed>',
+                  '    <invalid>You are missing information in the URL. Please verify the URL with the original invite.</invalid>',
+                  '    <exit cond="qualified">Thank you for taking our survey. Your efforts are greatly appreciated!</exit>',
+                  '    <exit cond="terminated">Thank you for taking our survey.</exit>',
+                  '    <exit cond="overquota">Thank you for taking our survey.</exit>',
                   '  </samplesource>',
                   '</samplesources>',
-                  '',
                   '']
 
-        footer = '\n<marker name="qualified"/>\n\n</survey>'.split('\n')
+        footer = '\n</survey>'.split('\n')
         return header + vbuffer + footer
 
     vim.current.buffer[:] = NewSurvey(vim.current.buffer[:])
