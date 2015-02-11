@@ -1,9 +1,8 @@
 decipher-clips plugin for vim
 =============================
 
-.. image:: https://travis-ci.org/rwscarb/decipher-clips.png?branch=master
-        :target: https://travis-ci.org/rwscarb/decipher-clips
-
+.. image:: https://travis-ci.org/decipher-survey-programming/vim-clips.svg
+    :target: https://travis-ci.org/decipher-survey-programming/vim-clips
 
 Installation
 ~~~~~~~~~~~~
