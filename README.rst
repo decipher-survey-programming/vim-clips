@@ -1,4 +1,4 @@
-decipher-clips plugin for vim
+decipher-vim-clips plugin for vim
 =============================
 
 .. image:: https://travis-ci.org/decipher-survey-programming/decipher-vim-clips.svg
@@ -8,7 +8,7 @@ Installation
 ~~~~~~~~~~~~
 
 You might want to use `pathogen <https://github.com/tpope/vim-pathogen>`_ to
-install decipher-clips in vim. Also you need a vim version that was compiled with
+install decipher-vim-clips in vim. Also you need a vim version that was compiled with
 ``+python``, which is typical for most distributions on Linux.
 
 
