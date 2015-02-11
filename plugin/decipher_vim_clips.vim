@@ -1,6 +1,6 @@
 " decipher_clips.vim - A collection of functions to help create Decipher surveys
 "
-" Place this script and the accompanying decipherclips directory in .vim/plugin
+" Place this script and the accompanying deciphervimclips directory in .vim/plugin
 "
 " See README.rst for additional information.
 "
@@ -20,9 +20,9 @@ import vim
 import re
 import string
 from urllib import quote
-moduleDir = os.path.join(os.path.dirname(vim.eval('expand("<sfile>")')), 'decipherclips')
+moduleDir = os.path.join(os.path.dirname(vim.eval('expand("<sfile>")')), 'deciphervimclips')
 sys.path.append(moduleDir)
-import decipherclips
+import deciphervimclips
 EOF
 
 
@@ -176,7 +176,7 @@ function! AttrSpacing()
 '<,'>python << EOF
 try:
 
-    vim.current.range[:] = decipherclips.clean_attribute_spacing(vim.current.range[:])
+    vim.current.range[:] = deciphervimclips.clean_attribute_spacing(vim.current.range[:])
 
 except Exception, e:
     print e
@@ -198,7 +198,7 @@ try:
 
             <row label="r1">Spam</row>
         """
-        return decipherclips.cell_factory(vrange, "row", "r") + ['\n']
+        return deciphervimclips.cell_factory(vrange, "row", "r") + ['\n']
 
     vim.current.range[:] = Rows(vim.current.range[:])
 
@@ -222,7 +222,7 @@ try:
 
             <col label="c2">Ham</col>
         """
-        return decipherclips.cell_factory(vrange, "col", "c") + ['\n']
+        return deciphervimclips.cell_factory(vrange, "col", "c") + ['\n']
 
     vim.current.range[:] = Cols(vim.current.range[:])
 
@@ -246,7 +246,7 @@ try:
 
             <choice label="ch3">Eggs</choice>
         """
-        return decipherclips.cell_factory(vrange, "choice", "ch") + ['\n']
+        return deciphervimclips.cell_factory(vrange, "choice", "ch") + ['\n']
 
     vim.current.range[:] = Choice(vim.current.range[:])
 
@@ -291,7 +291,7 @@ try:
                 num = re.match(r"(?P<num>\d+)\.?", line)
                 lines[i] = innerTemplate.format(**num.groupdict())
 
-        return decipherclips.cell_factory(lines, "col", "c")
+        return deciphervimclips.cell_factory(lines, "col", "c")
 
     vim.current.range[:] = Rates(vim.current.range[:])
 
@@ -324,7 +324,7 @@ try:
             </pipe>
         """
 
-        cases = decipherclips.cell_factory(vrange, "case", "c", attrs={'cond': ''})
+        cases = deciphervimclips.cell_factory(vrange, "case", "c", attrs={'cond': ''})
 
         cases.append("""  <case label="c99" cond="1">BAD PIPE</case>""")
 
@@ -357,7 +357,7 @@ try:
 
             <noanswer label="r99">Ni!</noanswer>
         """
-        return decipherclips.cell_factory(vrange, "noanswer", "r")
+        return deciphervimclips.cell_factory(vrange, "noanswer", "r")
 
     vim.current.range[:] = NoAnswer(vim.current.range[:])
 
@@ -427,10 +427,10 @@ try:
         else:
             comment = comment1D
 
-        element = decipherclips.element_factory(vrange,
+        element = deciphervimclips.element_factory(vrange,
                                            elType="radio",
                                            comment=comment)
-        decipherclips.openify(element)
+        deciphervimclips.openify(element)
 
         return element
 
@@ -454,13 +454,13 @@ try:
         """
         comment = "Please select all that apply"
         attrs = dict(atleast=1)
-        element = decipherclips.element_factory(vrange,
+        element = deciphervimclips.element_factory(vrange,
                                            attrs=attrs,
                                            elType="checkbox",
                                            comment=comment)
 
-        element = decipherclips.exclusify(element)
-        element = decipherclips.openify(element)
+        element = deciphervimclips.exclusify(element)
+        element = deciphervimclips.openify(element)
 
         return element
 
@@ -497,7 +497,7 @@ try:
 
         attrs = dict(optional=0)
 
-        return decipherclips.element_factory(vrange,
+        return deciphervimclips.element_factory(vrange,
                                         attrs=attrs,
                                         elType="select",
                                         comment=comment)
@@ -523,7 +523,7 @@ try:
         attrs = dict(size=3, optional=0)
         comment = "Please enter a whole number"
 
-        return decipherclips.element_factory(vrange,
+        return deciphervimclips.element_factory(vrange,
                                         elType="number",
                                         attrs=attrs,
                                         comment=comment)
@@ -549,7 +549,7 @@ try:
         attrs = dict(size=3, optional=0)
         comment = "Please enter a number"
 
-        return decipherclips.element_factory(vrange,
+        return deciphervimclips.element_factory(vrange,
                                         elType="float",
                                         attrs=attrs,
                                         comment=comment)
@@ -575,7 +575,7 @@ try:
         attrs = dict(optional=0)
         comment = "Please be as specific as possible"
 
-        return decipherclips.element_factory(vrange,
+        return deciphervimclips.element_factory(vrange,
                                         elType="text",
                                         attrs=attrs,
                                         comment=comment)
@@ -601,7 +601,7 @@ try:
         comment = "Please be as specific as possible"
         attrs = dict(optional=0)
 
-        return decipherclips.element_factory(vrange,
+        return deciphervimclips.element_factory(vrange,
                                         attrs=attrs,
                                         elType="textarea",
                                         comment=comment)
@@ -667,7 +667,7 @@ try:
 
         attrs = dict(type="rating", values="order", averages="cols", adim="rows")
 
-        return decipherclips.element_factory(vrange,
+        return deciphervimclips.element_factory(vrange,
                                         attrs=attrs,
                                         elType="radio",
                                         comment=comment)
@@ -710,7 +710,7 @@ try:
     def MakeGroups(vrange):
         """
         """
-        return decipherclips.cell_factory(vrange, "group", "g")
+        return deciphervimclips.cell_factory(vrange, "group", "g")
 
     vim.current.range[:] = MakeGroups(vim.current.range[:])
 
@@ -1180,7 +1180,7 @@ try:
         raise NotImplementedError("Visual Block Mode Not Supported")
     start = vim.current.buffer.mark('<')
     end   = vim.current.buffer.mark('>')
-    before, inside, after = decipherclips.get_visual_selection(vim.current.range[:], start, end)
+    before, inside, after = deciphervimclips.get_visual_selection(vim.current.range[:], start, end)
     vim.current.range[:] = (before + MailLink(inside) + after).split('\n')
 
 except Exception, e:
@@ -1199,7 +1199,7 @@ try:
         raise NotImplementedError("Visual Block Mode Not Supported")
     start = vim.current.buffer.mark('<')
     end   = vim.current.buffer.mark('>')
-    before, inside, after = decipherclips.get_visual_selection(vim.current.range[:], start, end)
+    before, inside, after = deciphervimclips.get_visual_selection(vim.current.range[:], start, end)
     vim.current.range[:] = (before + HRef(inside) + after).split('\n')
 
 except Exception, e:

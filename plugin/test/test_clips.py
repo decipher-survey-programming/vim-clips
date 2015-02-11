@@ -39,7 +39,7 @@ from functions import (NewSurvey,
 
 
 class TestClipFunctions(unittest.TestCase):
-    """Tests all major functions in decipher_clips.vim"""
+    """Tests all major functions in decipher_vim_clips.vim"""
 
     def setUp(self):
         self.cells = ['Ham', 'foo. Spam', 'bar Eggs', '42. Bacon']

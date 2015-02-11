@@ -5,12 +5,12 @@ import re
 import string
 from urllib import quote
 
-sys.path.append('plugin/decipherclips')
+sys.path.append('plugin/deciphervimclips')
 # noinspection PyUnresolvedReferences
-import decipherclips
+import deciphervimclips
 
 
-FUNCTION_DEPS = (os, string.uppercase, string.lowercase, quote, decipherclips)
+FUNCTION_DEPS = (os, string.uppercase, string.lowercase, quote, deciphervimclips)
 
 
 class ClipParserException(Exception):
@@ -58,4 +58,4 @@ class ClipFunctionParser(object):
         exec(code, globals(), globals())
 
 
-ClipFunctionParser('plugin/decipher_clips.vim').parse()
+ClipFunctionParser('plugin/decipher_vim_clips.vim').parse()

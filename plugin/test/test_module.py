@@ -3,10 +3,10 @@ from lxml import etree
 import sys
 import re
 
-sys.path.append('plugin/decipherclips')
+sys.path.append('plugin/deciphervimclips')
 
 # noinspection PyUnresolvedReferences
-import decipherclips
+import deciphervimclips
 
 
 def clean_xml(text):
@@ -61,7 +61,7 @@ class TestElementFactory(unittest.TestCase):
         for args in test_elements:
             mock_element_str = clean_xml(self.create_mock(*args))
             mock_element_xml = etree.fromstring('<root>{0}</root>'.format(mock_element_str))
-            generated_element_str = clean_xml(''.join(decipherclips.element_factory(*args)))
+            generated_element_str = clean_xml(''.join(deciphervimclips.element_factory(*args)))
             generated_element_xml = etree.fromstring('<root>{0}</root>'.format(generated_element_str))
             self.assertEqual(*map(etree.tostring, (mock_element_xml, generated_element_xml)))
 
@@ -70,7 +70,7 @@ class TestElementFactory(unittest.TestCase):
         )
 
         for args in badElements:
-            self.assertRaises(Exception, decipherclips.element_factory, args)
+            self.assertRaises(Exception, deciphervimclips.element_factory, args)
 
 
 class TestCellFactory(unittest.TestCase):
@@ -96,7 +96,7 @@ class TestCellFactory(unittest.TestCase):
 
         for args in test_cells:
             mock_xml = etree.fromstring('<root>{0}</root>'.format(create_mock(*args)))
-            generated_xml = etree.fromstring('<root>{0}</root>'.format(''.join(decipherclips.cell_factory(*args))))
+            generated_xml = etree.fromstring('<root>{0}</root>'.format(''.join(deciphervimclips.cell_factory(*args))))
             mock_xml, generated_xml = map(etree.tostring, (mock_xml, generated_xml))
             mock_xml, generated_xml = map(clean_xml, (mock_xml, generated_xml))
             self.assertEqual(mock_xml, generated_xml)
@@ -112,7 +112,7 @@ class TestCellFactory(unittest.TestCase):
 
         generated_elements = []
         for title in test_titles:
-            generated_elements.append(''.join(decipherclips.element_factory([title], 'radio', '', {})))
+            generated_elements.append(''.join(deciphervimclips.element_factory([title], 'radio', '', {})))
 
         expected_titles = (
             ('Q1', 'SPAM'),
@@ -144,7 +144,7 @@ class TestCellFactory(unittest.TestCase):
             '  <row label="r3"  >BACON</row>'
         ]
 
-        self.assertEqual(decipherclips.clean_attribute_spacing(unjustified_cells), justified_cells)
+        self.assertEqual(deciphervimclips.clean_attribute_spacing(unjustified_cells), justified_cells)
 
         unjustified_cells = [
             '  <row label="ham" cs:extra="HAM"  >HAM</row>',
@@ -158,4 +158,4 @@ class TestCellFactory(unittest.TestCase):
             '  <row label="r3"   cs:extra="BACON" exclusive="1" randomize="0">BACON</row>'
         ]
 
-        self.assertEqual(decipherclips.clean_attribute_spacing(unjustified_cells), justified_cells)
+        self.assertEqual(deciphervimclips.clean_attribute_spacing(unjustified_cells), justified_cells)
