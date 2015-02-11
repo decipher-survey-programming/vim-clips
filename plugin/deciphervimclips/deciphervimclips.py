@@ -1,5 +1,5 @@
 """
-Utility module for decipher_clips.vim
+Utility module for decipher_vim_clips.vim
 """
 import re
 
