@@ -6,7 +6,7 @@ import re
 sys.path.append('plugin/deciphervimclips')
 
 # noinspection PyUnresolvedReferences
-import deciphervimclips
+from deciphervimclips import deciphervimclips
 
 
 def clean_xml(text):
