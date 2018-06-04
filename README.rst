@@ -11,7 +11,8 @@ You may want to use a plugin manager. I suggest [vim-plug](https://github.com/ju
 
 
 Add vim-plug section to your `~/.vimrc`:
-```
+
+```vim
 call plug#begin('~/.vim/plugged')
 
 Plug 'MarcWeber/vim-addon-mw-utils'
