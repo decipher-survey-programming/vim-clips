@@ -1,3 +1,4 @@
+# coding: utf-8
 import vim
 import re
 import deciphervimclips

@@ -23,8 +23,8 @@ function! s:UsingPython3()
 endfunction
 
 let s:using_python3 = s:UsingPython3()
-let s:python_until_eof = s:using_python3 ? "python3 << EOF" : "exec s:python_until_eof"
-let s:python_until_eof_range = s:using_python3 ? "'<,'>python3 << EOF" : "exec s:python_until_eof_range"
+let s:python_until_eof = s:using_python3 ? "python3 << EOF" : "python << EOF"
+let s:python_until_eof_range = s:using_python3 ? "'<,'>python3 << EOF" : "'<,'>python << EOF"
 let s:python_command = s:using_python3 ? "py3 " : "py "
 
 
