@@ -7,10 +7,11 @@ from urllib import quote
 
 sys.path.append('plugin/deciphervimclips')
 # noinspection PyUnresolvedReferences
+import commands
 import deciphervimclips
 
 
-FUNCTION_DEPS = (os, string.uppercase, string.lowercase, quote, deciphervimclips)
+FUNCTION_DEPS = (os, string.uppercase, string.lowercase, quote, commands, deciphervimclips)
 
 
 class ClipParserException(Exception):

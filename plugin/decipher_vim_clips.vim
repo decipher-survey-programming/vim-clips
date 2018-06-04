@@ -7,24 +7,40 @@
 " Maintainer: Ryan Scarbery <ryan.scarbery@gmail.com>
 " Version: 0.1.2
 
-if !has('python')
-    " exit if python is not available.
-    finish
+let s:plugin_root_dir = fnamemodify(resolve(expand('<sfile>:p')), ':h')
+
+
+if !has('python') && !has('python3')
+   " exit if python is not available.
+   finish
 endif
 
+function! s:UsingPython3()
+  if has('python3')
+    return 1
+  endif
+  return 0
+endfunction
+
+let s:using_python3 = s:UsingPython3()
+let s:python_until_eof = s:using_python3 ? "python3 << EOF" : "exec s:python_until_eof"
+let s:python_until_eof_range = s:using_python3 ? "'<,'>python3 << EOF" : "exec s:python_until_eof_range"
+let s:python_command = s:using_python3 ? "py3 " : "py "
+
+
 " Setup
-python << EOF
+exec s:python_until_eof
 import os
 import sys
 import vim
-import re
-import string
-from urllib import quote
-moduleDir = os.path.join(os.path.dirname(vim.eval('expand("<sfile>")')), 'deciphervimclips')
-sys.path.append(moduleDir)
+
+#from urllib import quote
+plugin_root_dir = vim.eval('s:plugin_root_dir')
+python_root_dir = os.path.normpath(os.path.join(plugin_root_dir, 'deciphervimclips'))
+sys.path.insert(0, python_root_dir)
+import commands
 import deciphervimclips
 EOF
-
 
 " Normal Mode Mappings
 nmap <leader>ss  <Esc>ggVG:call CleanUp()<CR><Esc>:call NewSurvey()<CR>
@@ -87,1041 +103,379 @@ vmap <leader>as  <Esc>:call AttrSpacing()<CR>
 
 
 function! NewSurvey()
-python << EOF
+exec s:python_until_eof
 try:
-    def NewSurvey(vbuffer):
-        """
-        Surround vbuffer in new-survey template with sane defaults
-        """
-        COMPAT = 127
 
-        header = ['<?xml version="1.0" encoding="UTF-8"?>',
-                  '<survey alt=""',
-                  '    autosave="0"',
-                  '    browserDupes="safe"',
-                  '    compat="%d"' % COMPAT,
-                  '    displayOnError="all"',
-                  '    extraVariables="source,record,ipAddress,decLang,list,userAgent"',
-                  '    fir="on"',
-                  '    mobile="compat"',
-                  '    mobileDevices="smartphone,tablet,featurephone,desktop"',
-                  '    name="Survey"',
-                  '    setup="decLang,quota,term,time"',
-                  '    ss:disableBackButton="1"',
-                  '    ss:hideProgressBar="0"',
-                  '    ss:listDisplay="1"',
-                  '    ss:logoFile=""',
-                  '    ss:logoPosition="left"',
-                  '    unmacro="0"',
-                  '    unique=""',
-                  '    state="testing">',
-                  '',
-                  '<samplesources default="0">',
-                  '  <samplesource list="0" title="">',
-                  '    <completed>It seems you have already entered this survey.</completed>',
-                  '    <invalid>You are missing information in the URL. Please verify the URL with the original invite.</invalid>',
-                  '    <exit cond="qualified">Thank you for taking our survey. Your efforts are greatly appreciated!</exit>',
-                  '    <exit cond="terminated">Thank you for taking our survey.</exit>',
-                  '    <exit cond="overquota">Thank you for taking our survey.</exit>',
-                  '  </samplesource>',
-                  '</samplesources>',
-                  '']
+    commands.NewSurvey()
 
-        footer = '\n</survey>'.split('\n')
-        return header + vbuffer + footer
-
-    vim.current.buffer[:] = NewSurvey(vim.current.buffer[:])
-
-except Exception, e:
-    print e
+except Exception as e:
+    print(e)
 EOF
-set filetype=xml
 endfunction
 
 
 function! CleanUp()
-'<,'>python << EOF
+exec s:python_until_eof_range
 try:
-    def CleanUp(vrange):
-        """
-        Replaces common utf chars with ascii
-        also reduces and normalizes tabs and newlines
-        """
-        selection = '\n'.join(vrange)
 
-        selection = re.sub(r'\t+', ' ', selection)
-        selection = re.sub(r'\n\s+\n', '\n\n', selection)
-        selection = re.sub(r'\n{2,}', '\n\n', selection)
-        selection = re.sub(r'\r', '', selection)
+    commands.CleanUp()
 
-        transTable = {'–': '-',
-                      '”': '"',
-                      '“': '"',
-                      '‘': "'",
-                      '’': "'",
-                      '…': '...',
-                      '&': '&amp;'}
-
-        for k, v in transTable.items():
-            selection = selection.replace(k, v)
-        return [line.lstrip() for line in selection.split('\n')]
-
-    vim.current.range[:] = CleanUp(vim.current.range[:])
-
-except Exception, e:
-    print e
+except Exception as e:
+    print(e)
 EOF
 endfunction
 
 
 function! AttrSpacing()
-'<,'>python << EOF
+exec s:python_until_eof_range
 try:
 
     vim.current.range[:] = deciphervimclips.clean_attribute_spacing(vim.current.range[:])
 
-except Exception, e:
-    print e
+except Exception as e:
+    print(e)
 EOF
 endfunction
 
 
 function! Rows()
-'<,'>python << EOF
+exec s:python_until_eof_range
 try:
 
-    def Rows(vrange):
-        """
-        Makes ``row`` Cells with vrange lines as text nodes
+    commands.Rows()
 
-        .. code-block::xml
-
-            1. Spam
-
-            <row label="r1">Spam</row>
-        """
-        return deciphervimclips.cell_factory(vrange, "row", "r") + ['\n']
-
-    vim.current.range[:] = Rows(vim.current.range[:])
-
-except Exception, e:
-    print e
+except Exception as e:
+    print(e)
 EOF
 endfunction
 
 
 function! Cols()
-'<,'>python << EOF
+exec s:python_until_eof_range
 try:
 
-    def Cols(vrange):
-        """
-        Makes ``col`` Cells with vrange lines as text nodes
+    commands.Cols()    
 
-        .. code-block::xml
-
-            2. Ham
-
-            <col label="c2">Ham</col>
-        """
-        return deciphervimclips.cell_factory(vrange, "col", "c") + ['\n']
-
-    vim.current.range[:] = Cols(vim.current.range[:])
-
-except Exception, e:
-    print e
+except Exception as e:
+    print(e)
 EOF
 endfunction
 
 
 function! Choice()
-'<,'>python << EOF
+exec s:python_until_eof_range
 try:
 
-    def Choice(vrange):
-        """
-        Makes ``choice`` Cells with vrange lines as text nodes
+    commands.Choice() 
 
-        .. code-block::xml
-
-            3. Eggs
-
-            <choice label="ch3">Eggs</choice>
-        """
-        return deciphervimclips.cell_factory(vrange, "choice", "ch") + ['\n']
-
-    vim.current.range[:] = Choice(vim.current.range[:])
-
-except Exception, e:
-    print e
+except Exception as e:
+    print(e)
 EOF
 endfunction
 
 
 function! Rates()
-'<,'>python << EOF
+exec s:python_until_eof_range
 try:
 
-    def Rates(vrange):
-        """
-        Makes ``col`` Cells with vrange lines as text nodes
-        also, if the line leads with an integer it is placed at the
-        end of a <br/>
+    commands.Rates()
 
-        .. code-block::xml
-
-            1. Very Spammy
-            2.
-            3. Not at all Spammy
-
-            <col label="c1">Very Spammy<br/>1</col>
-            <col label="c2">2</col>
-            <col label="c3">Not at all Spammy<br/>3</col>
-        """
-
-        lines = [line.strip() for line in vrange if line.strip()]
-
-        row_rgx = re.compile(r"^(?P<num>[a-zA-Z0-9-_]+)\.?\s+(?P<text>\w.*)")
-
-        poleTemplate  =  "{num}. {text}<br/>{num}"
-        innerTemplate =  "{num}. {num}"
-
-        for i, line in enumerate(lines):
-            if row_rgx.match(line):
-                lines[i] = poleTemplate.format(**row_rgx.match(line).groupdict())
-            else:
-                num = re.match(r"(?P<num>\d+)\.?", line)
-                lines[i] = innerTemplate.format(**num.groupdict())
-
-        return deciphervimclips.cell_factory(lines, "col", "c")
-
-    vim.current.range[:] = Rates(vim.current.range[:])
-
-except Exception, e:
-    print e
+except Exception as e:
+    print(e)
 EOF
 endfunction
 
 
 function! Case()
-'<,'>python << EOF
+exec s:python_until_eof_range
 try:
 
-    def Case(vrange):
-        """
-        Creates a ``pipe`` Element with each line of vrange becoming
-        a case with an empty cond
+    commands.Case()
 
-        .. code-block::xml
-
-            Spam
-            Ham
-            Eggs
-
-            <pipe label="" capture="">
-              <case label="c1" cond="">Spam</case>
-              <case label="c2" cond="">Ham</case>
-              <case label="c3" cond="">Eggs</case>
-              <case label="c99" cond="1">BAD PIPE</case>
-            </pipe>
-        """
-
-        cases = deciphervimclips.cell_factory(vrange, "case", "c", attrs={'cond': ''})
-
-        cases.append("""  <case label="c99" cond="1">BAD PIPE</case>""")
-
-        cases = ['<pipe label="" capture="">'] + cases + ['</pipe>']
-
-        return cases
-
-    vim.current.range[:] = Case(vim.current.range[:])
-
-    cursor = vim.current.window.cursor
-    vim.current.window.cursor = cursor[0], cursor[1] + 12
-
-except Exception, e:
-    print e
+except Exception as e:
+    print(e)
 EOF
 endfunction
 
 
 function! NoAnswer()
-'<,'>python << EOF
+exec s:python_until_eof_range
 try:
 
-    def NoAnswer(vrange):
-        """
-        Makes ``noanswer`` Cells with vrange lines as text nodes
+    commands.NoAnswer()
 
-        .. code-block::xml
-
-            99. Ni!
-
-            <noanswer label="r99">Ni!</noanswer>
-        """
-        return deciphervimclips.cell_factory(vrange, "noanswer", "r")
-
-    vim.current.range[:] = NoAnswer(vim.current.range[:])
-
-except Exception, e:
-    print e
+except Exception as e:
+    print(e)
 EOF
 endfunction
 
 
 function! Resource()
-'<,'>python << EOF
+exec s:python_until_eof_range
 try:
 
-    def Resource(vrange):
-        """
-        Makes ``res`` Cells with vrange lines as text nodes
+    commands.Resource()
 
-        .. code-block::xml
-
-            dp. Dead Parrot
-
-            <res label="dp">Dead Parrot</res>
-        """
-        lines = [line for line in vrange if line.strip()]
-
-        label_rgx = re.compile('^(?P<label>\w*)\. (?P<text>.*)\s*$')
-
-        resTemplate   = '<res label="{label}">{text}</res>'
-
-        output = []
-        for line in lines:
-            hasLabel = label_rgx.match(line)
-            if hasLabel:
-                output.append(resTemplate.format(**hasLabel.groupdict()))
-            else:
-                output.append(resTemplate.format(label='', text=line))
-        return output
-
-    vim.current.range[:] = Resource(vim.current.range[:])
-
-    cursor = vim.current.window.cursor
-    vim.current.window.cursor = cursor[0], 11
-
-except Exception, e:
-    print e
+except Exception as e:
+    print(e)
 EOF
 endfunction
 
 
 function! MakeRadio()
-'<,'>python << EOF
+exec s:python_until_eof_range
 try:
 
-    def MakeRadio(vrange):
-        """
-        """
-        questionText = '\n'.join(vrange)
+    commands.MakeRadio()
 
-        hasRow = questionText.find('<row') != -1
-        hasCol = questionText.find('<col') != -1
-
-        comment1D = "Please select one"
-        comment2D = "Please select one for each row"
-
-        if hasRow and hasCol:
-            comment = comment2D
-        else:
-            comment = comment1D
-
-        element = deciphervimclips.element_factory(vrange,
-                                           elType="radio",
-                                           comment=comment)
-        deciphervimclips.openify(element)
-
-        return element
-
-    vim.current.range[:] = MakeRadio(vim.current.range[:])
-
-    cursor = vim.current.window.cursor
-    vim.current.window.cursor = cursor[0], len(vim.current.range[0]) - 1
-
-except Exception, e:
-    print e
+except Exception as e:
+    print(e)
 EOF
 endfunction
 
 
 function! MakeCheckbox()
-'<,'>python << EOF
+exec s:python_until_eof_range
 try:
 
-    def MakeCheckbox(vrange):
-        """
-        """
-        comment = "Please select all that apply"
-        attrs = dict(atleast=1)
-        element = deciphervimclips.element_factory(vrange,
-                                           attrs=attrs,
-                                           elType="checkbox",
-                                           comment=comment)
+    commands.MakeCheckbox()
 
-        element = deciphervimclips.exclusify(element)
-        element = deciphervimclips.openify(element)
-
-        return element
-
-    vim.current.range[:] = MakeCheckbox(vim.current.range[:])
-
-    cursor = vim.current.window.cursor
-    vim.current.window.cursor = cursor[0], len(vim.current.range[0]) - 1
-
-except Exception, e:
-    print e
+except Exception as e:
+    print(e)
 EOF
 endfunction
 
 
 function! MakeSelect()
-'<,'>python << EOF
+exec s:python_until_eof_range
 try:
 
-    def MakeSelect(vrange):
-        """
-        """
-        questionText = '\n'.join(vrange)
+    commands.MakeSelect()
 
-        hasRow = questionText.find('<row') != -1
-        hasCol = questionText.find('<col') != -1
-
-        comment1D = "Please select one"
-        comment2D = "Please select one for each selection"
-
-        if hasRow or hasCol:
-            comment = comment2D
-        else:
-            comment = comment1D
-
-        attrs = dict(optional=0)
-
-        return deciphervimclips.element_factory(vrange,
-                                        attrs=attrs,
-                                        elType="select",
-                                        comment=comment)
-
-    vim.current.range[:] = MakeSelect(vim.current.range[:])
-
-    cursor = vim.current.window.cursor
-    vim.current.window.cursor = cursor[0], len(vim.current.range[0]) - 1
-
-except Exception, e:
-    print e
+except Exception as e:
+    print(e)
 EOF
 endfunction
 
 
 function! MakeNumber()
-'<,'>python << EOF
+exec s:python_until_eof_range
 try:
 
-    def MakeNumber(vrange):
-        """
-        """
-        attrs = dict(size=3, optional=0)
-        comment = "Please enter a whole number"
+    commands.MakeNumber()
 
-        return deciphervimclips.element_factory(vrange,
-                                        elType="number",
-                                        attrs=attrs,
-                                        comment=comment)
-
-    vim.current.range[:] = MakeNumber(vim.current.range[:])
-
-    cursor = vim.current.window.cursor
-    vim.current.window.cursor = cursor[0], len(vim.current.range[0]) - 1
-
-except Exception, e:
-    print e
+except Exception as e:
+    print(e)
 EOF
 endfunction
 
 
 function! MakeFloat()
-'<,'>python << EOF
+exec s:python_until_eof_range
 try:
 
-    def MakeFloat(vrange):
-        """
-        """
-        attrs = dict(size=3, optional=0)
-        comment = "Please enter a number"
+    commands.MakeFloat()
 
-        return deciphervimclips.element_factory(vrange,
-                                        elType="float",
-                                        attrs=attrs,
-                                        comment=comment)
-
-    vim.current.range[:] = MakeFloat(vim.current.range[:])
-
-    cursor = vim.current.window.cursor
-    vim.current.window.cursor = cursor[0], len(vim.current.range[0]) - 1
-
-except Exception, e:
-    print e
+except Exception as e:
+    print(e)
 EOF
 endfunction
 
 
 function! MakeText()
-'<,'>python << EOF
+exec s:python_until_eof_range
 try:
 
-    def MakeText(vrange):
-        """
-        """
-        attrs = dict(optional=0)
-        comment = "Please be as specific as possible"
+   commands.MakeText()
 
-        return deciphervimclips.element_factory(vrange,
-                                        elType="text",
-                                        attrs=attrs,
-                                        comment=comment)
-
-    vim.current.range[:] = MakeText(vim.current.range[:])
-
-    cursor = vim.current.window.cursor
-    vim.current.window.cursor = cursor[0], len(vim.current.range[0]) - 1
-
-except Exception, e:
-    print e
+except Exception as e:
+    print(e)
 EOF
 endfunction
 
 
 function! MakeTextarea()
-'<,'>python << EOF
+exec s:python_until_eof_range
 try:
 
-    def MakeTextarea(vrange):
-        """
-        """
-        comment = "Please be as specific as possible"
-        attrs = dict(optional=0)
+    commands.MakeTextarea()
 
-        return deciphervimclips.element_factory(vrange,
-                                        attrs=attrs,
-                                        elType="textarea",
-                                        comment=comment)
-
-    vim.current.range[:] = MakeTextarea(vim.current.range[:])
-
-    cursor = vim.current.window.cursor
-    vim.current.window.cursor = cursor[0], len(vim.current.range[0]) - 1
-
-except Exception, e:
-    print e
+except Exception as e:
+    print(e)
 EOF
 endfunction
 
 
 function! MakeHTML()
-'<,'>python << EOF
+exec s:python_until_eof_range
 try:
 
-    def MakeHTML(vrange):
-        """
-        """
-        INDENT = 4
+    commands.MakeHTML()
 
-        lines = '\n'.join(' ' * INDENT + line for line in vrange if line.strip())
-        htmlTemplate = ('<html label="" where="survey">',
-                        '%s',
-                        '</html>')
-        htmlTemplate = '\n'.join(htmlTemplate)
-
-        return (htmlTemplate % lines).split('\n')
-
-    vim.current.range[:] = MakeHTML(vim.current.range[:])
-
-    cursor = vim.current.window.cursor
-    vim.current.window.cursor = cursor[0], 13
-
-except Exception, e:
-    print e
+except Exception as e:
+    print(e)
 EOF
 endfunction
 
 
 function! MakeRating()
-'<,'>python << EOF
+exec s:python_until_eof_range
 try:
 
-    def MakeRating(vrange):
-        """
-        """
-        questionText = '\n'.join(vrange)
+    commands.MakeRating()
 
-        hasRow = questionText.find('<row') != -1
-        hasCol = questionText.find('<col') != -1
-
-        comment1D = "Please select one"
-        comment2D = "Please select one for each row"
-
-        if hasRow and hasCol:
-            comment = comment2D
-        else:
-            comment = comment1D
-
-        attrs = dict(type="rating", values="order", averages="cols", adim="rows")
-
-        return deciphervimclips.element_factory(vrange,
-                                        attrs=attrs,
-                                        elType="radio",
-                                        comment=comment)
-
-    vim.current.range[:] = MakeRating(vim.current.range[:])
-
-    cursor = vim.current.window.cursor
-    vim.current.window.cursor = cursor[0], len(vim.current.range[0]) - 1
-
-except Exception, e:
-    print e
+except Exception as e:
+    print(e)
 EOF
 endfunction
 
 
 function! MakeNets()
-'<,'>python << EOF
+exec s:python_until_eof_range
 try:
 
-    def MakeNets(vrange):
-        """
-        """
-        return ['  <net labels="">%s</net>' % res.strip() for res in vrange if res.strip()]
+    commands.MakeNets()
 
-    vim.current.range[:] = MakeNets(vim.current.range[:])
-
-    cursor = vim.current.window.cursor
-    vim.current.window.cursor = cursor[0], 12
-
-except Exception, e:
-    print e
+except Exception as e:
+    print(e)
 EOF
 endfunction
 
 
 function! MakeGroups()
-'<,'>python << EOF
+exec s:python_until_eof_range
 try:
 
-    def MakeGroups(vrange):
-        """
-        """
-        return deciphervimclips.cell_factory(vrange, "group", "g")
+    commands.MakeGroups()
 
-    vim.current.range[:] = MakeGroups(vim.current.range[:])
-
-except Exception, e:
-    print e
+except Exception as e:
+    print(e)
 EOF
 endfunction
 
 
 function! MakeExtras()
-'<,'>python << EOF
+exec s:python_until_eof_range
 try:
 
-    def MakeExtras(vrange):
-        """
-        Pulls text-node into cs:extra attribute
-        Also attempts to make spacing uniform within xml
+    commands.MakeExtras()
 
-        .. code-block::xml
-
-            <row label="r1">SPAM SPAM SPAM</row>
-            <row label="r2">SPAM</row>
-
-            <row label="r1" cs:extra="SPAM SPAM SPAM">SPAM SPAM SPAM</row>
-            <row label="r2" cs:extra="SPAM"          >SPAM</row>
-        """
-        vrange = [line for line in vrange if line.strip()]
-        textNode_rgx = re.compile('>(.*?)<')
-
-        selection = vrange
-
-        textNodes = [textNode_rgx.findall(line)[0] for line in selection]
-        maxWidth = max(len(text) for text in textNodes) + 1
-        attrTemplate = '{0:<%d}>' % maxWidth
-
-        newSelection = []
-        for row, node in zip(selection, textNodes):
-            csExtra = ' cs:extra="' + attrTemplate.format(node + '"')
-            newRow = row.replace('>', csExtra, 1)
-            newSelection.append(newRow)
-
-        return newSelection
-
-    vim.current.range[:] = MakeExtras(vim.current.range[:])
-
-except Exception, e:
-    print e
+except Exception as e:
+    print(e)
 EOF
 endfunction
 
 
 function! MakeOrs()
-python << EOF
+exec s:python_until_eof
 try:
 
-    def MakeOrs(line, label, indices, element, joinType='or'):
-        """
-        """
-        import re
+    commands.MainMakeOrs()
 
-        indices = indices.strip()
-        if indices.find('--') != -1:
-            raise SyntaxError("Cannot have multiple dashes in range")
-
-        firstChar = indices[0]
-        elementTest  = re.sub('[-,\s]', '', indices)
-        indices = (i.strip() for i in indices.split(','))
-        joinType = ', ' if joinType == ',' else ' %s ' % joinType
-
-        syntaxMsg = "Unknown input. Ranges should numeric 1-10, or alpha A-F, but not both"
-        valueMsg = "Range is backwards: {0}-{1}"
-
-        res = []
-
-        if firstChar.isdigit():
-            if not re.match(r'^\d+$', elementTest):
-                raise SyntaxError(syntaxMsg)
-
-            for i in indices:
-                if '-' in i:
-                    start, end = map(int, i.split('-'))
-                    if start > end:
-                        raise ValueError(valueMsg.format(start, end))
-                    rng = list(range(start, end + 1))
-                    res.extend(map(str, rng))
-                else:
-                    res.append(i)
-
-        if firstChar.isalpha():
-            if not (re.match(r'^[a-z]+$', elementTest) or re.match(r'^[A-Z]+$', elementTest)):
-                raise SyntaxError("Cannot mix case. All letters must be UPPER or lower")
-
-            for c in indices:
-                case = string.uppercase if firstChar.isupper() else string.lowercase
-
-                if '-' in c:
-                    start, end = c.split('-')
-                    if len(start) > len(end):
-                        raise ValueError(valueMsg.format(start, end))
-                    for c in (start, end):
-                        if c.count(c[0]) != len(c):
-                            raise SyntaxError("Labels must be uniform: AA BB CC, not AC")
-                    startIndex = case.index(start[0])
-                    if len(start) == len(end):
-                        endIndex = case.index(end[0])
-                        if endIndex < startIndex:
-                            raise ValueError(valueMsg.format(start, end))
-                    multiplier = len(start)
-                    rng = [start]
-                    while start != end:
-                        i = (startIndex + 1) % len(case)
-                        if i < startIndex:
-                            multiplier += 1
-                        startIndex = i
-                        start = case[startIndex] * multiplier
-                        rng.append(start)
-                    res.extend(rng)
-                else:
-                    res.append(c)
-
-        formatDict = {'label': label, 'element': element, 'joinType': joinType}
-
-        condString = joinType.join(["%(label)s.%(element)s" % formatDict + c for c in res])
-
-        cond_rgx = re.compile('cond=".*?"')
-        rowCond_rgx = re.compile('rowCond=".*?"')
-        colCond_rgx = re.compile('colCond=".*?"')
-
-        if rowCond_rgx.search(line) and re.search(r'\[row\]', condString):
-            return rowCond_rgx.sub('rowCond="{0}"'.format(condString), line)
-        elif colCond_rgx.search(line) and re.search(r'\[col\]', condString):
-            return colCond_rgx.sub('colCond="{0}"'.format(condString), line)
-        elif cond_rgx.search(line):
-            return cond_rgx.sub('cond="{0}"'.format(condString), line)
-
-        return condString
-
-
-    def python_input(message):
-        vim.command('call inputsave()')
-        vim.command("let user_input = input('" + message + ": ')")
-        vim.command('call inputrestore()')
-        return vim.eval('user_input')
-
-    try:
-        label     = python_input("Question Label")
-        indices   = python_input("Label Numbers: e.g. (1-4,5|A-D,E)")
-        element   = python_input("Cell Type: e.g. (r|c|ch)")
-        joinType  = python_input("Join type: e.g. (or|and|,) [or]") or 'or'
-    except KeyboardInterrupt:
-        pass
-    else:
-        args = (arg.strip() for arg in (label, indices, element, joinType))
-        vim.current.line = MakeOrs(vim.current.line, *args)
-
-except Exception, e:
-    print e
+except Exception as e:
+    print(e)
 EOF
 endfunction
 
 
 function! AddValuesLow()
-'<,'>python << EOF
+exec s:python_until_eof_range
 try:
 
-    def AddValuesLow(vrange):
-        """
-        Adds value attributes to cells from low to high
+    commands.AddValuesLow()
 
-        .. code-block::xml
-
-            <col label="c1">Very Spammy<br/>1</col>
-            <col label="c2">2</col>
-            <col label="c3">Not at all Spammy<br/>3</col>
-
-            <col label="c1" value="1">Very Spammy<br/>1</col>
-            <col label="c2" value="2">2</col>
-            <col label="c3" value="3">Not at all Spammy<br/>3</col>
-        """
-        i = 1
-        output = []
-        for line in vrange:
-            if '>' in line:
-                output.append(line.replace('>', ' value="%d">' % i, 1))
-                i += 1
-            else:
-                output.append(line)
-
-        return output
-
-    vim.current.range[:] = AddValuesLow(vim.current.range[:])
-
-except Exception, e:
-    print e
+except Exception as e:
+    print(e)
 EOF
 endfunction
 
 
 function! AddValuesHigh()
-'<,'>python << EOF
+exec s:python_until_eof_range
 try:
 
-    def AddValuesHigh(vrange):
-        """
-        Adds value attributes to cells from high to low
+    commands.AddValuesHigh()
 
-        .. code-block::xml
-
-            <col label="c3">Not at all Spammy<br/>3</col>
-            <col label="c2">2</col>
-            <col label="c1">Very Spammy<br/>1</col>
-
-            <col label="c3" value="3">Not at all Spammy<br/>3</col>
-            <col label="c2" value="2">2</col>
-            <col label="c1" value="1">Very Spammy<br/>1</col>
-        """
-        i = len([line for line in vrange if '>' in line])
-        output = []
-        for line in vrange:
-            if '>' in line:
-                output.append(line.replace('>', ' value="%d">' % i, 1))
-                i -= 1
-            else:
-                output.append(line)
-
-        return output
-
-    vim.current.range[:] = AddValuesHigh(vim.current.range[:])
-
-except Exception, e:
-    print e
+except Exception as e:
+    print(e)
 EOF
 endfunction
 
 
 function! Switcher()
-'<,'>python << EOF
+exec s:python_until_eof_range
 try:
 
-    def Switcher(vrange):
-        """
-        """
-        for i in range(len(vrange)):
-            if "<row" in vrange[i]:
-                this1 = "row"
-                that1 = "col"
-                this2 = "r"
-                that2 = "c"
-            elif "<col" in vrange[i]:
-                this1 = "col"
-                that1 = "row"
-                this2 = "c"
-                that2 = "r"
-            vrange[i] = re.sub("(<|\/)" + this1, r'\1' + that1, vrange[i])
-            vrange[i] = re.sub('label="%s' % this2, 'label="%s' % that2, vrange[i])
-        return vrange
+    commands.Switcher()
 
-    vim.current.range[:] = Switcher(vim.current.range[:])
-
-except Exception, e:
-    print e
+except Exception as e:
+    print(e)
 EOF
 endfunction
 
 
 function! SwitchRating()
-python << EOF
+exec s:python_until_eof
 try:
 
-    def SwitchRating(vline):
-        """
-        """
-        namesToSwitch  = ('averages', 'adim')
-        valuesToSwitch = ('cols', 'rows')
+    commands.SwitchRating()
 
-        combos = []
-        for attr in namesToSwitch:
-            pair = []
-            for val in valuesToSwitch:
-                pair.append('{0}="{1}"'.format(attr, val))
-            combos.append(pair)
-
-        for combo in combos:
-            for i, attr in enumerate(combo):
-                if vline.find(attr) != -1:
-                    vline = vline.replace(attr, combo[i ^ 1])
-                    break
-
-        return vline
-
-    vim.current.line = SwitchRating(vim.current.line)
-
-except Exception, e:
-    print e
+except Exception as e:
+    print(e)
 EOF
 endfunction
 
 
 function! AddGroups()
-'<,'>python << EOF
+exec s:python_until_eof_range
 try:
 
-    def AddGroups(vrange):
-        """
-        """
-        for i, line in enumerate(vrange):
-            vrange[i] = line.replace(">", ' groups="g1">', 1)
+    commands.AddGroups()
 
-        return vrange
-
-    vim.current.range[:] = AddGroups(vim.current.range[:])
-
-except Exception, e:
-    print e
+except Exception as e:
+    print(e)
 EOF
 endfunction
 
 
 function! CommentQuestion()
-'<,'>python << EOF
+exec s:python_until_eof_range
 try:
 
-    def CommentQuestion(vrange):
-        """
-        """
-        INDENT = 2
-        INDENT = ' ' * INDENT
+    commands.CommentQuestion()
 
-        if len(vrange) == 1:
-            template = INDENT + "<comment>%s</comment>"
-            selection = '\n'.join([line.strip() for line in vrange if line.strip()])
-        else:
-            template = INDENT + "<comment>\n%s\n" + INDENT + "</comment>"
-            selection = '\n'.join([(INDENT * 2) + line.strip() for line in vrange if line.strip()])
-
-        return (template % selection).split('\n')
-
-    vim.current.range[:] = CommentQuestion(vim.current.range[:])
-
-except Exception, e:
-    print e
+except Exception as e:
+    print(e)
 EOF
 endfunction
 
 
 function! HTMLComment()
-'<,'>python << EOF
+exec s:python_until_eof_range
 try:
 
-    def HTMLComment(vrange):
-        """
-        """
-        return ['<!--'] + vrange + ['-->']
+    commands.HTMLComment()
 
-    vim.current.range[:] = HTMLComment(vim.current.range[:])
-
-except Exception, e:
-    print e
+except Exception as e:
+    print(e)
 EOF
 endfunction
 
 
 function! AddAlts()
-'<,'>python << EOF
+exec s:python_until_eof_range
 try:
 
-    def AddAlts(vrange):
-        """
-        Inserts an <alt> for Cells and Element <title>
+    commands.AddAlts()
 
-        .. code-block::xml
-
-            <title>What is your favorite color?</title>
-            <row label="r1">Blue</row>
-            <row label="r2">Green</row>
-            <row label="r3">Red</row>
-
-            <title>What is your favorite color?</title>
-            <alt>What is your favorite color?</alt>
-            <row label="r1"><alt>Blue</alt>Blue</row>
-            <row label="r2"><alt>Green</alt>Green</row>
-            <row label="r3"><alt>Red</alt>Red</row>
-        """
-        ELEMENTS = ('row', 'col', 'choice', 'group')
-
-        selection = '\n'.join(vrange)
-
-        rgxTemplate = "(?P<open><({elements}).*?>)(?P<text>.*?)(?P<close></({elements})\s*?>)"
-        cell_rgx  = re.compile(rgxTemplate.format(elements='|'.join(ELEMENTS)), re.DOTALL)
-        title_rgx = re.compile(rgxTemplate.format(elements='title'), re.DOTALL)
-
-        cellSub  = "\g<open><alt>\g<text></alt>\g<text>\g<close>"
-        titleSub = "\g<open>\g<text>\g<close>\n  <alt>\g<text></alt>"
-
-        selection = cell_rgx.sub(cellSub, selection)
-        selection = title_rgx.sub(titleSub, selection)
-
-        return selection.split('\n')
-
-    vim.current.range[:] = AddAlts(vim.current.range[:])
-
-except Exception, e:
-    print e
+except Exception as e:
+    print(e)
 EOF
 endfunction
 
 
 function! Validate()
-python << EOF
+exec s:python_until_eof
 try:
     """
     TODO Remove macro lines @foo bar=baz
@@ -1130,50 +484,50 @@ try:
     """
     raise NotImplementedError("XXX TODO external validate module")
 
-except Exception, e:
-    print e
+except Exception as e:
+    print(e)
 EOF
 endfunction
 
 
 function! Escape()
-'<,'>python << EOF
+exec s:python_until_eof_range
 try:
 
     vim.current.range[:] = [line.replace('<', '&lt;').replace('>', '&gt;') for line in vim.current.range[:]]
 
-except Exception, e:
-    print e
+except Exception as e:
+    print(e)
 EOF
 endfunction
 
 
 function! URLQuote()
-'<,'>python << EOF
+exec s:python_until_eof_range
 try:
 
-    vim.current.range[:] = [quote(line) for line in vim.current.range[:]]
+    commands.URLQuote()
 
-except Exception, e:
-    print e
+except Exception as e:
+    print(e)
 EOF
 endfunction
 
 
 function! SpaceQuote()
-'<,'>python << EOF
+exec s:python_until_eof_range
 try:
 
     vim.current.range[:] = [line.replace(' ', '&#32;') for line in vim.current.range[:]]
 
-except Exception, e:
-    print e
+except Exception as e:
+    print(e)
 EOF
 endfunction
 
 
 function! MailLink()
-'<,'>python << EOF
+exec s:python_until_eof_range
 try:
     def MailLink(selection):
         return '<a href="mailto:{email}">{email}</a>'.format(email=selection)
@@ -1185,14 +539,14 @@ try:
     before, inside, after = deciphervimclips.get_visual_selection(vim.current.range[:], start, end)
     vim.current.range[:] = (before + MailLink(inside) + after).split('\n')
 
-except Exception, e:
-    print e
+except Exception as e:
+    print(e)
 EOF
 endfunction
 
 
 function! HRef()
-'<,'>python << EOF
+exec s:python_until_eof_range
 try:
     def HRef(selection):
         return '<a href="{selection}">{selection}</a>'.format(selection=selection)
@@ -1204,125 +558,50 @@ try:
     before, inside, after = deciphervimclips.get_visual_selection(vim.current.range[:], start, end)
     vim.current.range[:] = (before + HRef(inside) + after).split('\n')
 
-except Exception, e:
-    print e
+except Exception as e:
+    print(e)
 EOF
 endfunction
 
 
 function! Strip()
-'<,'>python << EOF
+exec s:python_until_eof_range
 try:
 
-    def Strip(vrange):
-        """
-        Strip the text-node out of it's Cell
+    commands.Strip()
 
-        .. code-block::xml
-
-            <row label="r1">Want to be free</row>
-
-            Want to be free
-        """
-
-        ELEMENTS = ('row', 'col', 'choice', 'group')
-
-        text_rgx = re.compile('\s*<({elements}).*?>(?P<text>.*?)</({elements}).*'.format(elements='|'.join(ELEMENTS)))
-
-        output = []
-
-        for line in vrange:
-            match = text_rgx.match(line)
-            if match:
-                output.append(match.groupdict()['text'])
-            else:
-                output.append(line.strip())
-
-        return output
-
-    vim.current.range[:] = Strip(vim.current.range[:])
-
-except Exception, e:
-    print e
+except Exception as e:
+    print(e)
 EOF
 endfunction
 
 
 function! Justify()
-python << EOF
+exec s:python_until_eof
 try:
 
-    def Justify(vrange):
-        """
-        Justify a long string of words
-        to MAX_LINE_LENGTH. Preserves indentation
-        """
-        selection = ''.join(vrange)
+    commands.Justify()
 
-        MAX_LINE_LENGTH = 79
-
-        indent = len(selection) - len(selection.lstrip())
-        words  = [word for word in selection.split(' ') if word]
-
-        lines = []
-
-        lineLength = 0
-        curLine = []
-        wordCount = len(words)
-        for i, word in enumerate(words):
-            curLine.append(word)
-            lineLength += len(word)
-            if lineLength > MAX_LINE_LENGTH or (i == wordCount - 1):
-                lines.append(' ' * indent + ' '.join(curLine))
-                curLine, lineLength = [], 0
-        return lines
-
-    vim.current.range[:] = Justify(vim.current.range[:])
-
-except Exception, e:
-    print e
+except Exception as e:
+    print(e)
 EOF
 endfunction
 
 
 function! CleanNotes()
-python << EOF
+exec s:python_until_eof
 try:
 
-    def CleanNotes(vbuffer):
-        """
-        Clean up TaskList notes for email
+    commands.CleanNotes()
 
-        .. code-block::xml
-
-            <!-- XXX [Q1]: The parrot is dead! -->
-
-            [Q1]: The parrot is dead! 
-        """
-        comment_rgx = re.compile(r'.*XXX \[(?P<label>[^\]]+)\]: (?P<note>.*) -->')
-
-        template = '[{label}]: {note}'
-
-        output = []
-        for line in vbuffer:
-            match = comment_rgx.match(line)
-            if match:
-                output.append(template.format(**match.groupdict()))
-            else:
-                output.append(line)
-
-        return output
-
-    vim.current.buffer[:] = CleanNotes(vim.current.buffer[:])
-
-except Exception, e:
-    print e
+except Exception as e:
+    print(e)
 EOF
 endfunction
 
 
 function! Vimdiff()
-python << EOF
+exec s:python_until_eof
 """
 Split buffer by blank lines and open in vimdiff
 """
@@ -1348,14 +627,14 @@ try:
 
     Popen(cmd, stdout=PIPE).wait()
 
-except Exception, e:
-    print e
+except Exception as e:
+    print(e)
 EOF
 endfunction
 
 
 function! CommentBlocks()
-python << EOF
+exec s:python_until_eof
 """
 Add <!-- EO block --> style comments
 to the end of blocks for easier navigation
@@ -1400,7 +679,10 @@ try:
 
     vim.current.buffer[:] = CommentBlocks(vim.current.buffer[:])
 
-except Exception, e:
-    print e
+except Exception as e:
+    print(e)
 EOF
 endfunction
+
+
+
