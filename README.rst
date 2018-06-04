@@ -10,18 +10,18 @@ You may want to use a plugin manager. I suggest [vim-plug](https://github.com/ju
 ``+python``, which is typical for most distributions on Linux.
 
 
-Add vim-plug section to your `~/.vimrc`:
+Add vim-plug section to your ``~/.vimrc``:
 
-```vim
-call plug#begin('~/.vim/plugged')
+.. code-block:: vim
+    call plug#begin('~/.vim/plugged')
 
-Plug 'MarcWeber/vim-addon-mw-utils'
-Plug 'tomtom/tlib_vim'
-Plug 'garbas/vim-snipmate'
-Plug 'https://github.com/matt92martin/decipher-vim-clips.git'
+    Plug 'MarcWeber/vim-addon-mw-utils'
+    Plug 'tomtom/tlib_vim'
+    Plug 'garbas/vim-snipmate'
+    Plug 'https://github.com/matt92martin/decipher-vim-clips.git'
 
-call plug#end()
-```
+    call plug#end()
+
 
 
 Cheat Sheet
