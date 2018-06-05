@@ -6,7 +6,7 @@ decipher-vim-clips plugin for vim
 
 Installation
 ~~~~~~~~~~~~
-You may want to use a plugin manager. I suggest `vim-plug<https://github.com/junegunn/vim-plug>`_. Also you need a vim version that was compiled with
+You may want to use a plugin manager. I suggest `vim-plug <https://github.com/junegunn/vim-plug>`_. Also you need a vim version that was compiled with
 ``+python``, which is typical for most distributions on Linux.
 
 
