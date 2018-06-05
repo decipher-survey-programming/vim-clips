@@ -6,6 +6,7 @@ import re
 sys.path.append('plugin/deciphervimclips')
 
 # noinspection PyUnresolvedReferences
+import commands
 import deciphervimclips
 
 

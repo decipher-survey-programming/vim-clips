@@ -1,0 +1,583 @@
+snippet rel
+	[rel ${1}]${2}
+
+snippet note
+	<note>${1:START COMMENT}</note>
+snippet static
+	http://69.20.5.96/survey/${gv.survey.path}/${1:image}
+snippet cdata
+	<![CDATA[
+	    ${1:foo}
+	]]>
+
+#
+# styles
+#
+snippet question.after
+	<style name="question.after" wrap="ready">
+	  <![CDATA[
+	    var qn = ${jsexport()}; //json object
+
+	    var $qn = $ ("#question_" + qn.label);
+	    ${1://some code}
+	  ]]>
+	</style>
+	${2}
+snippet css
+	<style name="respview.client.css">
+	  <![CDATA[
+	    <link rel="stylesheet" href="[rel ${1:file}.css]" type="text/css" charset="utf-8"/>
+	  ]]>
+	</style>
+	${2}
+
+snippet js
+	<style name="respview.client.js">
+	  <![CDATA[
+	    <script type="text/javascript" src="[rel ${1:file}.js]"></script>
+	  ]]>
+	</style>
+	${2}
+
+#
+# Common Text
+#
+snippet nota
+	None of the Above
+snippet dk
+	Don't Know / Not Applicable
+snippet pipe
+	[pipe: ${1:Q1}]
+snippet and
+	&amp;
+snippet tm
+	&#8482;
+snippet reg
+	&#174;
+
+#
+# Survey Elements
+#
+snippet exec
+	<exec>
+	${1}
+	</exec>
+	${2}
+snippet validate
+	<validate>
+	${1}
+	</validate>
+	${2}
+snippet virtual
+	<virtual>
+	${1}
+	</virtual>
+	${2}
+snippet term
+	<term cond="${3:foo}">${1:bar}: ${2:baz}</term>
+snippet quota
+	<quota sheet="${1:Quota}"/>
+	${2}
+snippet marker
+	<marker name="${1:foo}"/>
+snippet block
+	<block label="${1:label}" randomizeChildren="${2:0}" cond="${3:1}">
+	</block>
+	<!-- EO $1 -->
+snippet init
+	<exec when="${1:init}">
+	</exec>
+snippet group
+	<group label="g${1:1}" ${2:where="none"}></group>
+snippet net
+	<net label="${1}" labels="${2}">${3}</net>	
+
+snippet condition
+	<condition label="${1:foo}" cond="${2:bar}">${3:baz}</condition>
+snippet qtables
+	<label onLoad="createQuotaTables()"/>
+snippet ttables
+	<label onLoad="createTerminateTables()"/>
+snippet datasource
+	<datasource datasourceKey="${1:source}"
+	    ourKey="${2:source}"
+	    label="${3:ds1}"
+	    filename="${4}"
+	    storedVariables="${5}"
+	    normalizeKey="none"/>
+snippet vstatus
+	<radio label="vStatus" title="Respondent Status">
+	<virtual>
+	if 'recovered' in markers:
+	    data[0][0] = vStatus.r4.index
+	else:
+	    if 'qualified' in markers:
+	        data[0][0] = vStatus.r3.index
+	    elif 'OQ' in markers:
+	        data[0][0] = vStatus.r2.index
+	    else:
+	        data[0][0] = vStatus.r1.index
+	</virtual>
+	  <row label="r1">Terminate</row>
+	  <row label="r2">OverQuota</row>
+	  <row label="r3">Qualified</row>
+	  <row label="r4">Partial</row>
+	</radio>
+	${3}
+
+snippet vchange
+	<radio label="vChange" title="Change">
+	<virtual>
+	if '${1:change_20130618}' in markers:
+	    data[0][0] = vChange.r2.index
+	else:
+	    data[0][0] = vChange.r1.index
+	</virtual>
+	  <row label="r1">Old Survey</row>
+	  <row label="r2">${2:06/18/2013} - Change</row>
+	</radio>
+	${3}
+
+snippet dblock
+	<exec when="init">db = Database("invited.txt")</exec>
+	<marker name="lockme" cond="list in [ '7' ]"/><!-- update this part, for more complex locking -->
+	
+	<html final="1" cond="hasMarker('lockme') and not db.valid(source)" label="invited_not" where="survey">${hlang.get("invited.not")}</html>
+	<html final="1" cond="hasMarker('lockme') and db.inuse(source)" label="invited_inprogress" where="survey">${hlang.get("invited.inprogress")}</html>
+	<html final="1" cond="hasMarker('lockme') and db.has(source)" label="invited_used" where="survey">${hlang.get("invited.used")}</html>
+	
+	<exec when="finished">if hasMarker('lockme'):  db.add(source)</exec>
+
+snippet vrandom
+	<number label='vRandom' size='1' title='Order of elements'>
+	  <virtual>assignRandomOrder('${1}', 'children')</virtual>
+	  <row label='${2}'>${3}</row>
+	  <row label='${4}'>${5}</row>
+	</number>
+	${6}
+#
+# Survey Cells
+#
+snippet noanswer
+	  <noanswer label="${1:r2}">${2:Don't know}</noanswer>
+snippet agenets
+	  <nets>14-17,18-24,25-34,35-44,45-54,55-65</nets>
+#
+# Element Attributes
+#
+snippet sb
+	 shuffleBy="${1:Q}"
+snippet oo
+	 openOptional="1"
+snippet colleg
+	 colLegendRows="${1:}"
+snippet ppt
+	 style="prePostText" cs:${1:postText}="${res.${2:foo}}"
+snippet style
+	 style="${1:style}"
+snippet verify
+	 verify="range(${1:0},${2:100})"
+snippet onload
+	 onLoad="copy('${1:Q}', rows=True${2:})"
+snippet zip
+	 verify="zipcode" size="5"
+snippet dir
+	 ratingDirection="reverse"
+snippet rowcond
+	 rowCond="${1:}"
+snippet colcond
+	 colCond="${1:}"
+snippet atmost
+	 atmost="${1}"
+snippet atleast
+	 atleast="${1:1}"
+snippet cond
+	 cond="${1}"
+snippet unique
+	 unique="1"
+snippet grouping
+	 grouping="cols"
+snippet rep
+	 where="report"
+snippet sst
+	 sst="0"
+snippet survey
+	 where="survey,notdp"
+snippet notdp
+	 where="none,notdp"
+snippet where
+	 where="${1:survey,notdp}"
+snippet none
+	 where="none"
+snippet rightof
+	 rightOf="${1:}"
+snippet below
+	 below="${1:}"
+snippet bucket
+	 virtual="bucketize(co)"
+snippet sortrows
+	 sortRows="${1:asc}"
+snippet size
+	 size="${1}"
+snippet width
+	 width="${1}"
+snippet adim
+	 adim="${1:cols}"
+snippet alt
+	 <alt>${1}</alt>
+snippet rating
+	 averages="cols" values="order" adim="rows" type="rating"
+snippet otherlang
+	 otherLanguages="${1}"
+snippet mls
+	 mls="${1:english}"
+snippet fav
+	 onLoad="copy('${1:Q1}', rows=True)" shuffle="rows" shuffleBy="$1" rowCond="$1[row]"
+snippet dref
+	 dataRef="${1}"
+snippet dsource
+	 dataSource="${1}"
+#
+# Sample Sources
+#
+snippet lock
+	<var name="source" filename="invited.txt" unique="1"/>
+snippet var
+	<var name="${1:foo}" ${2:unique="1"} ${3:required="1"}/>
+#
+# Snippet Bundles
+#
+snippet languages
+	<languages default="english">
+	    <language name="english" var="co" value="us"/>
+	    <language name="spanish" var="co" value="es"/>
+	    <language name="german"  var="co" value="de"/>
+	</languages>
+snippet csextra
+	<exec>
+	for r in ${1:virtual}.rows:
+	    if ${2:Q1}.check(r.styles.cs.extra):
+	        $1.val = r.index
+	        break
+	</exec>
+#
+# Python Snippets
+#
+snippet order
+	<exec>${1:Q1}.${2:rows}.order = ${3:Q2}.${4:rows}.order</exec>
+snippet vquota
+	v${1:Picked}.val = [int(m[len('/$1/'):].split('_')[0]) - 1 for m in p.markers if m.startswith('/$1/')][0]
+#
+# Python Functions
+#
+snippet cells
+	cells = gv.survey.root.quota.getQuotaCells()
+snippet setlang
+	setLanguage('${1}')
+
+snippet qtime
+	<float cmsEditable="0" label="qtime" title="Total Interview Time" where="report"/>
+	<exec when="finished">qtime.val = timeSpent()/60.0</exec>
+
+snippet loop
+	<loop label="${1}" vars="${2}" title="${3}" suspend="0">
+	  <block label="${4}">
+	
+	  </block>
+	
+	  <looprow label="${5:1}" cond="${6}">
+	    <loopvar name="${7}">${8}</loopvar>
+	  </looprow>
+	</loop>
+
+
+snippet timestamp
+	def save_time_stamp(q):    
+	    """
+	    Expects a text question and saves the current time stamp
+	    """
+	    q.val = gv.survey.root.transformDate(time.time())
+snippet flash_quote
+	import urllib
+
+	def flash_quote(string):
+	    """
+	    Checks if flashDetected is True,
+	    If True, returns URL escaped string
+	    Else returns string unchanged
+	    """
+	    if flashDetected:
+	        return urllib.quote(string)
+	    else:
+	        return string
+snippet groupmap
+	def make_group_map(q):
+	    groupMap = {}
+	    for r in q.rows:
+	        group = groupMap.setdefault(r.group.label, [])
+	        group.append(r)
+	    return groupMap
+snippet states
+	<choice label="ch1">Alabama</choice>
+	<choice label="ch2">Alaska</choice>
+	<choice label="ch3">Arizona</choice>
+	<choice label="ch4">Arkansas</choice>
+	<choice label="ch5">California</choice>
+	<choice label="ch6">Colorado</choice>
+	<choice label="ch7">Connecticut</choice>
+	<choice label="ch8">Delaware</choice>
+	<choice label="ch9">District of Columbia</choice>
+	<choice label="ch10">Florida</choice>
+	<choice label="ch11">Georgia</choice>
+	<choice label="ch12">Hawaii</choice>
+	<choice label="ch13">Idaho</choice>
+	<choice label="ch14">Illinois</choice>
+	<choice label="ch15">Indiana</choice>
+	<choice label="ch16">Iowa</choice>
+	<choice label="ch17">Kansas</choice>
+	<choice label="ch18">Kentucky</choice>
+	<choice label="ch19">Louisiana</choice>
+	<choice label="ch20">Maine</choice>
+	<choice label="ch21">Maryland</choice>
+	<choice label="ch22">Massachusetts</choice>
+	<choice label="ch23">Michigan</choice>
+	<choice label="ch24">Minnesota</choice>
+	<choice label="ch25">Mississippi</choice>
+	<choice label="ch26">Missouri</choice>
+	<choice label="ch27">Montana</choice>
+	<choice label="ch28">Nebraska</choice>
+	<choice label="ch29">Nevada</choice>
+	<choice label="ch30">New Hampshire</choice>
+	<choice label="ch31">New Jersey</choice>
+	<choice label="ch32">New Mexico</choice>
+	<choice label="ch33">New York</choice>
+	<choice label="ch34">North Carolina</choice>
+	<choice label="ch35">North Dakota</choice>
+	<choice label="ch36">Ohio</choice>
+	<choice label="ch37">Oklahoma</choice>
+	<choice label="ch38">Oregon</choice>
+	<choice label="ch39">Pennsylvania</choice>
+	<choice label="ch40">Rhode Island</choice>
+	<choice label="ch41">South Carolina</choice>
+	<choice label="ch42">South Dakota</choice>
+	<choice label="ch43">Tennessee</choice>
+	<choice label="ch44">Texas</choice>
+	<choice label="ch45">Utah</choice>
+	<choice label="ch46">Vermont</choice>
+	<choice label="ch47">Virginia</choice>
+	<choice label="ch48">Washington</choice>
+	<choice label="ch49">West Virginia</choice>
+	<choice label="ch50">Wisconsin</choice>
+	<choice label="ch51">Wyoming</choice>
+
+#
+# AQ STYLES
+#
+
+snippet atm1d
+	  <uses>atm1d.${1:2}</uses>
+	${2}
+snippet atmtable
+	  <uses>atmtable.${1:1}</uses>
+	${2}
+snippet autosum
+	  <uses>autosum.${1:1}</uses>
+	  <autosum:preText>${2}</autosum:preText>
+	  <autosum:postText>${3}</autosum:postText>
+	  <autosum:sumPreText>${4:Total:}</autosum:sumPreText>
+	  <autosum:amount>${5}</autosum:amount>
+	${6}
+snippet bcme
+	<textarea label="${1:Q1}" optional="0" size="25">
+	  <title>${2:Title Text}</title>
+	  <comment>${3:Comment Text}</comment>
+	  <uses>bcme.${4:1}</uses>
+	  <bcme:video_id>${5}</bcme:video_id>
+	  <bcme:width>${6:640}</bcme:width>
+	  <bcme:height>${7:360}</bcme:height>
+	  <bcme:pause_enable>${8:0}</bcme:pause_enable>
+	  <bcme:autostart>${9:0}</bcme:autostart>
+	  <bcme:autosubmit>${10:0}</bcme:autosubmit>
+	  <bcme:watermark>${11:}</bcme:watermark>
+	  <bcme:watermark_position>${12:Top Left}</bcme:watermark_position>
+	  <bcme:watermark_animated>${13:0}</bcme:watermark_animated>
+	  <bcme:slider_orientation>${14:Horizontal}</bcme:slider_orientation>
+	  <bcme:slider_min>${15:0}</bcme:slider_min>
+	  <bcme:slider_max>${16:100}</bcme:slider_max>
+	  <bcme:slider_range>${17:none}</bcme:slider_range>
+	  <bcme:slider_step>${18:1}</bcme:slider_step>
+	  <bcme:legend_left>${19:}</bcme:legend_left>
+	  <bcme:legend_middle>${20:}</bcme:legend_middle>
+	  <bcme:legend_right>${21:}</bcme:legend_right>
+	  <bcme:engagement_text>${22:Please use the slider to indicate your preference for the video.}</bcme:engagement_text>
+	  <bcme:engagement_time>${23:10}</bcme:engagement_time>
+	  <bcme:engagement_skin>${24:light}</bcme:engagement_skin>
+	</textarea>
+	<suspend/>
+snippet bcvideo
+	<checkbox label="${1:Q1}" atleast="1">
+	  <title>${2:Title Text}</title>
+	  <comment>${3:Comment Text}</comment>
+	  <uses>bcvideo.${4:1}</uses>
+	  <bcvideo:video_id>${5}</bcvideo:video_id>
+	  <bcvideo:width>${6:640}</bcvideo:width>
+	  <bcvideo:height>${7:360}</bcvideo:height>
+	  <bcvideo:pause_enable>${8:0}</bcvideo:pause_enable>
+	  <bcvideo:replay_enable>${9:0}</bcvideo:replay_enable>
+	  <bcvideo:autostart>${10:0}</bcvideo:autostart>
+	  <bcvideo:autosubmit>${11:0}</bcvideo:autosubmit>
+	  <bcvideo:allow_fullscreen>${12:0}</bcvideo:allow_fullscreen>
+	  <bcvideo:chromeless_video>${13:1}</bcvideo:chromeless_video>
+	  <bcvideo:watermark>${14}</bcvideo:watermark>
+	  <bcvideo:watermark_position>${15:Top Left}</bcvideo:watermark_position>
+	  <bcvideo:watermark_animated>${16:0}</bcvideo:watermark_animated>
+	</checkbox>
+	<suspend/>
+snippet cardsort
+	  <uses>cardsort.${1:2}</uses>
+	  <cardsort:buttonPreviousHTML>${2:<i class='fa-icon-chevron-left'></i> Prev}</cardsort:buttonPreviousHTML>
+	  <cardsort:buttonNextHTML>${3:Next <i class='fa-icon-chevron-right'></i>}</cardsort:buttonNextHTML> 
+	  <cardsort:completionHTML>${4:<b>All done!</b><br/><i>Click the "Continue" button to proceed.</i>}</cardsort:completionHTML>
+	${5}
+snippet clickabletext
+	  <uses>clickabletext.${1:1}</uses>
+	${2}
+snippet clickabletexttoggle
+	  <uses>clickabletexttoggle.${1:1}</uses>
+	${2}
+snippet fancyboxes
+	  <uses>fancyboxes.${1:1}</uses>
+	${2}
+snippet fir
+	  <uses>fir.${1:1}</uses>
+	  <fir:image_radio_css>${2}</fir:image_radio_css>
+	  <fir:image_checkbox_css>${3}</fir:image_checkbox_css>
+	${4}
+snippet greyout
+	  <uses>greyout.${1:1}</uses>
+	${2}
+snippet heatclick
+	  <uses>heatclick.${1:1}</uses>
+	  <heatclick:image>${2}</heatclick:image>
+	  <heatclick:bugimage>${3}</heatclick:bugimage>
+	  <heatclick:continue_text>${4:Continue}</heatclick:continue_text>
+	  <heatclick:reset_text>${5:Reset}</heatclick:reset_text>
+	  <heatclick:optout_text>${6}</heatclick:optout_text>
+	  <heatclick:width>${7:700}</heatclick:width>
+	  <heatclick:height>${8:500}</heatclick:height>
+	  <heatclick:bugwidth>${9:10}</heatclick:bugwidth>
+	  <heatclick:bugheight>${10:10}</heatclick:bugheight>
+	  <heatclick:max>${11:999}</heatclick:max>
+	  <heatclick:min>${12:0}</heatclick:min>
+	${13}
+snippet hotspot
+	  <uses>hotspot.${1:1}</uses>
+	  <hotspot:image>${2}</hotspot:image>
+	  <hotspot:imageWidth>${3}</hotspot:imageWidth>
+	  <hotspot:imageHeight>${4}</hotspot:imageHeight>
+	${5}
+snippet hotspotrow
+	  <hotspot:shape>${1:rect}</hotspot:shape>
+	  <hotspot:coordinates>${2}</hotspot:coordinates>
+	  <hotspot:fillColor>${3:#76dd71}</hotspot:fillColor>
+	${4}
+snippet hotspottoggle
+	  <uses>hotspottoggle.${1:1}</uses>
+	  <hotspottoggle:image>${2}</hotspottoggle:image>
+	  <hotspottoggle:imageWidth>${3}</hotspottoggle:imageWidth>
+	  <hotspottoggle:imageHeight>${4}</hotspottoggle:imageHeight>
+	  <hotspottoggle:requiredAnswers>${5:1}</hotspottoggle:requiredAnswers>
+	${6}
+snippet hotspottogglerow
+	  <hotspottoggle:shape>${1:rect}</hotspottoggle:shape>
+	  <hotspottoggle:coordinates>${2}</hotspottoggle:coordinates>
+	  <hotspottoggle:fillColor>${3:#76dd71}</hotspottoggle:fillColor>
+	${4}
+snippet hottext
+	<select label="${1:Q1}" optional="1">
+	  <title>${2:Title Text}</title>
+	  <comment>${3:Comment Text}</comment>
+	  <uses>hottext.${4:1}</uses>
+	  <hottext:atleast>${5:1}</hottext:atleast>
+	  <hottext:atmost>${6:9999}</hottext:atmost>
+	  <choice label="ch1">${7:Like}</choice>
+	  <choice label="ch2">${8:Neutral}</choice>
+	  <choice label="ch3">${9:Dislike}</choice>
+	  <row label="r1">Update</row>
+	  <row label="r2">With</row>
+	  <row label="r3">Actual</row>
+	  <row label="r4">Hot</row>
+	  <row label="r5">Text</row>
+	  <row label="r6">Rows</row>
+	  <noanswer label="na1">${10:Prefer not to answer}</noanswer>
+	</select>
+	<suspend/>
+snippet imgmap
+	<textarea label="${1:Q1}" optional="0" size="25">
+	  <title>${2:Title Text}</title>
+	  <comment>${3:Comment Text}</comment>
+	  <uses>imgmap.${4:1}</uses>
+	  <imgmap:image>${5:image.png}</imgmap:image>
+	  <imgmap:loading>${6:Loading...}</imgmap:loading>
+	  <col label="c1">${7:Like}</col>
+	  <col label="c2">${8:Neutral}</col>
+	  <col label="c3">${9:Dislike}</col>
+	  <noanswer label="na1">${10:Prefer not to answer}</noanswer>
+	</textarea>
+	<suspend/>
+snippet leftright
+	  <uses>leftright.${1:1}</uses>
+	${2}
+snippet multicol
+	  <uses>multicol.${1:2}</uses>
+	  <multicol:flow>${2:vertical}</multicol:flow>
+	  <multicol:count>${3:2}</multicol:count>
+	${4}
+snippet onerowatatime
+	  <uses>onerowatatime.${1:1}</uses>
+	${2}
+snippet ranksort
+	  <uses>ranksort.${1:1}</uses>
+	  <ranksort:showBucketText>${2:1}</ranksort:showBucketText>
+	  <ranksort:showBucketNumber>${3:1}</ranksort:showBucketNumber>
+	${4}
+snippet ratingscale
+	  <uses>ratingscale.${1:1}</uses>
+	  <ratingscale:bubble_size>${2:38}</ratingscale:bubble_size>
+	  <ratingscale:bubble_img>${3:/survey/lib/steam/ratingscale/v1/ratingscale-both.png}</ratingscale:bubble_img>
+	  <ratingscale:hide_radio>${4:0}</ratingscale:hide_radio>
+	  <ratingscale:radio_img_size>${5:0}</ratingscale:radio_img_size>
+	  <ratingscale:radio_img>${6:/survey/lib/steam/ratingscale/v1/ratingscale-empty.png}</ratingscale:radio_img>
+	  <ratingscale:radio_selected_img>${7}</ratingscale:radio_selected_img>
+	  <ratingscale:radio_img_transition>${8:0}</ratingscale:radio_img_transition>
+	${9}
+snippet scroll
+	  <uses>scroll.${1:1}</uses>
+	  <scroll:height>${2:200px}</scroll:height>
+	${3}
+snippet separator
+	  <uses>separator.${1:1}</uses>
+	  <separator:elements>${2}</separator:elements>
+	  <separator:space>${3}</separator:space>
+	  <separator:color>${4}</separator:color>
+	${5}
+snippet slidernumber
+	  <uses>slidernumber.${1:2}</uses>
+	  <slidernumber:sliderPosition>${2:Off Scale}</slidernumber:sliderPosition>
+	  <slidernumber:step>${3:1}</slidernumber:step>
+	  <slidernumber:legendPosition>${4:Below Slider}</slidernumber:legendPosition>
+	  <slidernumber:leftLegend>${5}</slidernumber:leftLegend>
+	  <slidernumber:midLegend>${6}</slidernumber:midLegend>
+	  <slidernumber:rightLegend>${7}</slidernumber:rightLegend>
+	  <slidernumber:showValue>${8:Above Slider}</slidernumber:showValue>
+	  <slidernumber:preText>${9}</slidernumber:preText>
+	  <slidernumber:postText>${10}</slidernumber:postText>
+	  <slidernumber:editable>${11:1}</slidernumber:editable>
+	  <slidernumber:showRange>${12:1}</slidernumber:showRange>
+	  <slidernumber:OO_Text>${13}</slidernumber:OO_Text>
+	  <slidernumber:offScaleText>${14}</slidernumber:offScaleText>
+	${15}
+snippet starrating
+	  <uses>starrating.${1:1}</uses>
+	  <starrating:tooltips>${2:1}</starrating:tooltips>
+	${3}

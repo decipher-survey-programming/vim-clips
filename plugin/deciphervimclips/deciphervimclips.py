@@ -3,6 +3,8 @@ Utility module for decipher_vim_clips.vim
 """
 import re
 
+def test():
+    print('wow')
 
 def element_factory(selection, elType='radio', comment='', attrs=None):
     """Return an xml v2-Element as a list of strings
@@ -35,7 +37,7 @@ def element_factory(selection, elType='radio', comment='', attrs=None):
     # dashes and periods become underscores
     label = re.sub(r'[-\.]', '_', label)
 
-    template = '\n'.join(("<%(elType)s label=\"%(label)s\">",
+    template = '\n'.join(("<%(elType)s\n  label=\"%(label)s\"%(extras)s>",
                           "  <title>%(title)s</title>",
                           "%(selection)s",
                           "</%(elType)s>",
@@ -44,15 +46,15 @@ def element_factory(selection, elType='radio', comment='', attrs=None):
     if selection.find("<comment") == -1:
         selection = "  <comment>%s</comment>\n" % comment + selection
 
+    extras = ''
+    if attrs:
+        extras = '\n  ' + '\n  '.join('%s="%s"' % (k, v) for k, v in attrs.items())
+
     element = (template % (dict(elType=elType,
                                 label=label,
                                 title=title,
-                                selection=selection))).split("\n")
-
-    attrs_str = " ".join('%s="%s"' % (k, v) for k, v in attrs.items())
-
-    if attrs_str:
-        element[0] = element[0].replace('">', '" ' + attrs_str + ">", 1)
+                                selection=selection,
+                                extras=extras))).split("\n")
 
     return element
 
