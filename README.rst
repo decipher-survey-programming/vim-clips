@@ -19,7 +19,7 @@ Add vim-plug section to your ``~/.vimrc``:
     Plug 'MarcWeber/vim-addon-mw-utils'
     Plug 'tomtom/tlib_vim'
     Plug 'garbas/vim-snipmate'
-    Plug 'https://github.com/matt92martin/decipher-vim-clips.git'
+    Plug 'https://github.com/decipher-survey-programming/decipher-vim-clips.git'
 
     call plug#end()
 
